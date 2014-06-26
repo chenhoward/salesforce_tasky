@@ -24,4 +24,16 @@ public class TaskyUtilities{
         insert collaborator;
         return collaborator;
     }
+    
+    public Tasky_Task__c createTask(String name, String detail, Id projectId,
+                                    Id userId, DateTime deadline) {
+        Tasky_Task__c task = new Tasky_Task__c();
+        task.Name = name;
+        task.Detail__c = detail;
+        task.Project__c = projectId;
+        task.Assignee__c = userId;
+        task.Deadline__c = deadline;
+        insert task;
+        return task;
+    }
 }
