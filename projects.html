@@ -19,8 +19,11 @@ applyBodyTag="false"
 </html>
 
 <body>
-    <h1> Tasky </h1>
-    <p> Select a Project </p>
+    <div ng-controller="ProjectCtrl">
+        <h1> Tasky </h1>
+        <p> Select a Project </p>
+    </div>
+
 </body>
 
 
@@ -29,31 +32,33 @@ applyBodyTag="false"
 var checklistApp = angular.module('taskyApp', []);
 
 checklistApp.controller('ProjectCtrl', function($scope) {
+
     /** An array of Projects. */
-    $scope.projects;
-    console.log('hi');
+    $scope.projects = [];
+
+    var createProjectsFromCollaborators = function(collaborators) {
+        for(var i = 0; i < collaborators.length; i++) {
+            $scope.projects[i] = collaborators[i].Project__r;
+        }
+    }
+
 
     Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.ProjectController.getCollaborators}',
+        '{!$RemoteAction.ProjectController.getUserCollaborators}',
         function(result, event) {
             if (event.status) {
-                console.log('s');
-                $scope.collaborators = result;
-                $scope.apply();
-                console.log($scope.collaborators);
+                createProjectsFromCollaborators(result);
+                $scope.$apply();
             } else if (event.type === 'exception') {
                 console.log('exception');
             } else {
                 console.log('error');
+            }
         }
-        }
-         
+
         );
 
-
-
 });
-    console.log('hi');
 
 </script>
 </apex:page>
