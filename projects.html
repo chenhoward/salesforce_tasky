@@ -2,8 +2,7 @@
 sidebar="false" 
 showheader="false"
 standardStylesheets="false"
-standardController="Checklist_Response__c"
-extensions="ChecklistExtension"
+Controller="ProjectController"
 applyHtmlTag="false"
 applyBodyTag="false"
 >
@@ -18,4 +17,43 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
 </head>
 </html>
+
+<body>
+    <h1> Tasky </h1>
+    <p> Select a Project </p>
+</body>
+
+
+<script>
+/** Angular Script */
+var checklistApp = angular.module('taskyApp', []);
+
+checklistApp.controller('ProjectCtrl', function($scope) {
+    /** An array of Projects. */
+    $scope.projects;
+    console.log('hi');
+
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.ProjectController.getCollaborators}',
+        function(result, event) {
+            if (event.status) {
+                console.log('s');
+                $scope.collaborators = result;
+                $scope.apply();
+                console.log($scope.collaborators);
+            } else if (event.type === 'exception') {
+                console.log('exception');
+            } else {
+                console.log('error');
+        }
+        }
+         
+        );
+
+
+
+});
+    console.log('hi');
+
+</script>
 </apex:page>
