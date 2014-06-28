@@ -14,4 +14,13 @@ global class ProjectController{
         Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Deadline__c, Detail__c FROM Tasky_Task__c WHERE Project__c =: projectId];
         return tasks;
     }
+
+    @RemoteAction
+    global static Tasky_Project__c project(String name, String description) {
+        Tasky_Project__c proj = new Tasky_Project__c();
+        proj.Name = name;
+        proj.Description__c = description;
+        insert proj;
+        return proj;
+    }
 }
