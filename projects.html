@@ -22,9 +22,13 @@ applyBodyTag="false"
     <div ng-controller="ProjectCtrl">
         <h1> Tasky </h1>
         <p> Select a Project </p>
-        <div ng-repeat="project in projects"> 
-            <p> {{project.Name}} </p>
+        <div ng-repeat="project in projects" ng-click="getTasks(project.Id)"> 
+            <p > {{project.Name}} </p>
             <p> {{project.Description__c}} </p>
+        </div>
+        <div ng-repeat="task in tasks">
+                        <p > {{task.Name}} </p>
+
         </div>
     </div>
 
@@ -39,6 +43,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
     /** An array of Projects. */
     $scope.projects = [];
+    /** An array of Tasks. */
+    $scope.tasks = [];
 
 
     /** Takes COLLABORATORS and gets project information from them. */
@@ -56,6 +62,25 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             function(result, event) {
                 if (event.status) {
                     createProjectsFromCollaborators(result);
+                    $scope.$apply();
+                } else if (event.type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
+            }
+            );
+    }
+
+    $scope.getTasks = function(projectId) {
+        console.log('start');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.getTasks}',
+            projectId,
+            function(result, event) {
+                if (event.status) {
+                    console.log(result);
+                    $scope.tasks = result;
                     $scope.$apply();
                 } else if (event.type === 'exception') {
                     console.log('exception');
