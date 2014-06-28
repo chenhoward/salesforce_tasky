@@ -22,6 +22,10 @@ applyBodyTag="false"
     <div ng-controller="ProjectCtrl">
         <h1> Tasky </h1>
         <p> Select a Project </p>
+        <div ng-repeat="project in projects"> 
+            <p> {{project.Name}} </p>
+            <p> {{project.Description__c}} </p>
+        </div>
     </div>
 
 </body>
@@ -36,6 +40,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     /** An array of Projects. */
     $scope.projects = [];
 
+
+    /** Takes COLLABORATORS and gets project information from them. */
     var createProjectsFromCollaborators = function(collaborators) {
         for(var i = 0; i < collaborators.length; i++) {
             $scope.projects[i] = collaborators[i].Project__r;
@@ -43,20 +49,25 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     }
 
 
-    Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.ProjectController.getUserCollaborators}',
-        function(result, event) {
-            if (event.status) {
-                createProjectsFromCollaborators(result);
-                $scope.$apply();
-            } else if (event.type === 'exception') {
-                console.log('exception');
-            } else {
-                console.log('error');
+    /** Gets all Collaborators that look up to current user. */
+    var getUserCollaborators = function() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.getUserCollaborators}',
+            function(result, event) {
+                if (event.status) {
+                    createProjectsFromCollaborators(result);
+                    $scope.$apply();
+                } else if (event.type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
             }
-        }
+            );
+    }
 
-        );
+    getUserCollaborators();
+
 
 });
 
