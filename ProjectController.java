@@ -11,14 +11,14 @@ global class ProjectController{
     /** Gets all Tasks associated with the Project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Task__c[] getTasks(Id projectId) {
-        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Deadline__c, Detail__c FROM Tasky_Task__c WHERE Project__c =: projectId];
+        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Deadline__c, Detail__c, Late__c FROM Tasky_Task__c WHERE Project__c =: projectId];
         return tasks;
     }
 
     @RemoteAction
-    global static Tasky_Project__c project(String name, String description) {
+    global static Tasky_Project__c createProject(String projectName, String description) {
         Tasky_Project__c proj = new Tasky_Project__c();
-        proj.Name = name;
+        proj.Name = projectName;
         proj.Description__c = description;
         insert proj;
         return proj;

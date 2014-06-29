@@ -28,6 +28,7 @@ applyBodyTag="false"
         </div>
         <div ng-repeat="task in tasks">
                         <p > {{task.Name}} </p>
+                        <p ng-show="task.Late__c">Late af</p>
         </div>
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
