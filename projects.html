@@ -35,6 +35,10 @@ applyBodyTag="false"
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
         <button ng-click="createProject(projName, description)"> {{projName}} </button>
+        <input ng-model="currentTask.Name"></input>
+        <input ng-model="currentTask.Detail__c"></input>
+        <input type="datetime" ng-model="currentTask.Deadline__c"></input>
+        <button ng-click="createTask(currentTask)"></button>
 
     </div>
 
@@ -51,6 +55,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.projects = [];
     /** An array of Tasks. */
     $scope.tasks = [];
+    /** The current task we are reviewing. */
+    $scope.currentTask = {};
 
 
     /** Takes COLLABORATORS and gets project information from them. */
@@ -68,6 +74,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             function(result, event) {
                 if (event.status) {
                     createProjectsFromCollaborators(result);
+                        $scope.currentProject = $scope.projects[0];
+
                     $scope.$apply();
                 } else if (event.type === 'exception') {
                     console.log('exception');
@@ -134,12 +142,13 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     }
 
     getUserCollaborators();
-    $scope.currentProject = $scope.projects[0];
 
 
     $scope.createTask = function(task) {
+        console.log($scope.currentProject);
+        task.Project__c = $scope.currentProject.Id;
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.updateTaskStatus}',
+            '{!$RemoteAction.ProjectController.createTask}',
             task,
             function(result, event) {
                 if (event.status) {
