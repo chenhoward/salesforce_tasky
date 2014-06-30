@@ -30,15 +30,15 @@ applyBodyTag="false"
                         <p> {{task.Name}} </p>
                         <p ng-show="task.Late__c">Late af</p>
                         <input ng-model="task.Status__c"></input>
-                        <button ng-click="updateTaskStatus(task.Id, task.Status__c)"></button>
+                        <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
         </div>
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
-        <button ng-click="createProject(projName, description)"> {{projName}} </button>
+        <button ng-click="createProject(projName, description)"> Create Project </button>
         <input ng-model="currentTask.Name"></input>
         <input ng-model="currentTask.Detail__c"></input>
         <input type="datetime" ng-model="currentTask.Deadline__c"></input>
-        <button ng-click="createTask(currentTask)"></button>
+        <button ng-click="createTask(currentTask)"> Create Task </button>
 
     </div>
 
