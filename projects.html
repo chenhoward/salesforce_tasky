@@ -113,6 +113,23 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             );
     }
 
+    $scope.updateTaskStatus = function(taskId, status) {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.updateTaskStatus}',
+            taskId,
+            status,
+            function(result, event) {
+                if (event.status) {
+                    console.log('Updated task');
+                } else if (event.type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
+            }
+
+            );
+    }
     getUserCollaborators();
 
 

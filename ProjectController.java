@@ -23,4 +23,11 @@ global class ProjectController{
         insert proj;
         return proj;
     }
+
+    @RemoteAction
+    global static Tasky_Task__c updateTaskStatus(Id taskID, String status) {
+        Tasky_Task__c task = [SELECT Status__c FROM Tasky_Task__c WHERE Id =: taskId];
+        task.Status__c = status;
+        update task;
+    }
 }
