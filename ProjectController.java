@@ -29,5 +29,12 @@ global class ProjectController{
         Tasky_Task__c task = [SELECT Status__c FROM Tasky_Task__c WHERE Id =: taskId];
         task.Status__c = status;
         update task;
+        return task;
+    }
+
+    @RemoteAction
+    global static Tasky_Task__c createTask(Tasky_Task__c task) {
+        insert task;
+        return task;
     }
 }
