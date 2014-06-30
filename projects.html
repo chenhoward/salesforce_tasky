@@ -26,19 +26,24 @@ applyBodyTag="false"
             <p > {{project.Name}} </p>
             <p> {{project.Description__c}} </p>
         </div>
+        <h1> Task </h1>
         <div ng-repeat="task in tasks">
-            <p> {{task.Name}} </p>
-            <p ng-show="task.Late__c">Late af</p>
+            <input ng-model="task.Name"></input>
+            <input ng-model="task.Detail__c"></input>
             <input ng-model="task.Status__c"></input>
+            <p> {{task.Deadline__c}} </p>
+            <p ng-show="task.Late__c">Late</p>
+            <button ng-click="upsertTask(task)"> Upsert </button>
             <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
         </div>
+        <h1> End </h1>
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
         <button ng-click="createProject(projName, description)"> Create Project </button>
         <input ng-model="currentTask.Name"></input>
         <input ng-model="currentTask.Detail__c"></input>
         <input type="datetime" ng-model="currentTask.Deadline__c"></input>
-        <button ng-click="createTask(currentTask)"> Create Task </button>
+        <button ng-click="upsertTask(currentTask)"> Create Task </button>
 
     </div>
 
@@ -143,13 +148,24 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
     getUserCollaborators();
 
+    var stripTask = function(task) {
+        copy = {};
+        copy.Deadline__c = task.Deadline__c;
+        copy.Detail__c = task.Detail__c;
+        copy.Id = task.Id;
+        copy.Name = task.Name;
+        copy.Project__c = task.Project__c;
+        copy.Status__c = task.Status__c;
+        return copy;
+    }
 
-    $scope.createTask = function(task) {
+    $scope.upsertTask = function(task) {
         console.log($scope.currentProject);
+        console.log(task);
         task.Project__c = $scope.currentProject.Id;
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.createTask}',
-            task,
+            '{!$RemoteAction.ProjectController.upsertTask}',
+            stripTask(task),
             function(result, event) {
                 if (event.status) {
                     console.log('Create Task')
