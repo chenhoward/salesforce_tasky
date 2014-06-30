@@ -27,10 +27,10 @@ applyBodyTag="false"
             <p> {{project.Description__c}} </p>
         </div>
         <div ng-repeat="task in tasks">
-                        <p> {{task.Name}} </p>
-                        <p ng-show="task.Late__c">Late af</p>
-                        <input ng-model="task.Status__c"></input>
-                        <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
+            <p> {{task.Name}} </p>
+            <p ng-show="task.Late__c">Late af</p>
+            <input ng-model="task.Status__c"></input>
+            <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
         </div>
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
@@ -74,7 +74,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             function(result, event) {
                 if (event.status) {
                     createProjectsFromCollaborators(result);
-                        $scope.currentProject = $scope.projects[0];
+                    $scope.currentProject = $scope.projects[0];
 
                     $scope.$apply();
                 } else if (event.type === 'exception') {
@@ -159,7 +159,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
                     console.log('error');
                 }
             }
-        );
+            );
 
     }
 
