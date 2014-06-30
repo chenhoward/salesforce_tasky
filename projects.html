@@ -132,8 +132,27 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
             );
     }
-    getUserCollaborators();
 
+    getUserCollaborators();
+    $scope.currentProject = $scope.projects[0];
+
+
+    $scope.createTask = function(task) {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.updateTaskStatus}',
+            task,
+            function(result, event) {
+                if (event.status) {
+                    console.log('Create Task')
+                } else if (event.type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
+            }
+        );
+
+    }
 
 });
 
