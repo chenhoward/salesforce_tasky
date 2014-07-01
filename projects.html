@@ -37,6 +37,10 @@ applyBodyTag="false"
             <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
         </div>
         <h1> End </h1>
+        <h1> Users </h1>
+        <div ng-repeat="user in users">
+            <p> {{user.Name}} </p>
+        </div>
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
         <button ng-click="createProject(projName, description)"> Create Project </button>
@@ -62,6 +66,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.tasks = [];
     /** The current task we are reviewing. */
     $scope.currentTask = {};
+    /** The list of all users in the org, */
+    $scope.users = [];
 
 
     /** Takes COLLABORATORS and gets project information from them. */
@@ -176,6 +182,25 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             }
             );
     }
+
+    $scope.getOrgUsers = function() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.getOrgUsers}',
+            function(result, event) {
+                if (event.status) {
+                    $scope.users = result;
+                    $scope.$apply();
+                } else if (event.type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                    console.log(event.message);
+                }
+            }
+        );
+    }
+
+    $scope.getOrgUsers();
 
 });
 
