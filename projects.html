@@ -38,7 +38,7 @@ applyBodyTag="false"
         </div>
         <h1> End </h1>
         <h1> Users </h1>
-        <div ng-repeat="user in users">
+        <div ng-repeat="user in users" ng-click="addCollaborator(projects[0].Id, user.Id)">
             <p> {{user.Name}} </p>
         </div>
         <input ng-model="projName"></input>
@@ -200,6 +200,22 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         );
     }
 
+    $scope.addCollaborator = function(projectId, userId) {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.addCollaborator}',
+            projectId,
+            userId,
+            function(result, event) {
+                if (event.status) {
+                    console.log('Added user');
+                } else if (event,type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
+            }
+        );
+    }
     $scope.getOrgUsers();
 
 });
