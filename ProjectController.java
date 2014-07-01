@@ -21,6 +21,11 @@ global class ProjectController{
         proj.Name = projectName;
         proj.Description__c = description;
         insert proj;
+        Tasky_Collaborator__c collaborator = new Tasky_Collaborator__c();
+        collaborator.Project__c = proj.Id;
+        collaborator.User__c = UserInfo.getUserId();
+        collaborator.Name = UserInfo.getName();
+        insert collaborator;
         return proj;
     }
 
