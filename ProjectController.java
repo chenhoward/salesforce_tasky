@@ -58,9 +58,17 @@ global class ProjectController{
         return collaborator;
     }
 
+    /** Returns all the users in the org. */
     @RemoteAction
     global static User[] getOrgUsers() {
         User[] users = [SELECT Name, Id FROM User];
         return users;
+    }
+
+    @RemoteAction
+    global static Tasky_Collaborator__c removeCollaborator(Id projectId, Id userId) {
+        Tasky_Collaborator__c[] collaborators = [SELECT Id FROM Tasky_Collaborator__c WHERE Project__c =: projectId AND User__c =: userId];
+        delete collaborators[0];
+        return collaborators[0];
     }
 }
