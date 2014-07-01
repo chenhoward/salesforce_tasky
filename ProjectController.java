@@ -79,4 +79,19 @@ global class ProjectController{
         Tasky_Collaborator__c[] collaborators = [SELECT Id, Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
         return collaborators;
     }
+
+    /** Assigns Collaborator with Id COLLABORATORID to TASK. */
+    @RemoteAction
+    global static Tasky_Task__c assignTask(Tasky_Task__c task, Id collaboratorId) {
+        task.Assignee__c = collaboratorId;
+        update task;
+        return task;
+    }
+
+    @RemoteAction
+    global static Tasky_Task__c removeTaskCollaborator(Tasky_Task__c task) {
+        task.Assignee__c = null;
+        update task;
+        return task;
+    }
 }

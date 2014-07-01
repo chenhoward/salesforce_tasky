@@ -81,7 +81,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             $scope.projects[i] = collaborators[i].Project__r;
         }
     }
-var getProjectCollaborators = function() {
+    var getProjectCollaborators = function() {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.getProjectCollaborators}',
             $scope.projects[0].Id,
@@ -106,7 +106,7 @@ var getProjectCollaborators = function() {
                 if (event.status) {
                     createProjectsFromCollaborators(result);
                     $scope.currentProject = $scope.projects[0];
-                        getProjectCollaborators();
+                    getProjectCollaborators();
 
 
                     $scope.$apply();
@@ -225,11 +225,11 @@ var getProjectCollaborators = function() {
                     console.log(event.message);
                 }
             }
-        );
+            );
     }
 
     /** Adds a collaborator that ties the user with Id USERID to a 
-     *  Project with Id PROJECTID. */
+    *  Project with Id PROJECTID. */
     $scope.addCollaborator = function(projectId, userId) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.addCollaborator}',
@@ -244,7 +244,7 @@ var getProjectCollaborators = function() {
                     console.log('error');
                 }
             }
-        );
+            );
     }
 
     /** Removes the Collaborator with Id COLLABORATOR ID from a Project. */
@@ -261,7 +261,7 @@ var getProjectCollaborators = function() {
                     console.log('error');
                 }
             }
-        );
+            );
     }
 
     $scope.getOrgUsers();
