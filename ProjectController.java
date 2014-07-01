@@ -15,6 +15,7 @@ global class ProjectController{
         return tasks;
     }
 
+    /** Create a project named PROJECTNAME with a DESCRIPTION. */
     @RemoteAction
     global static Tasky_Project__c createProject(String projectName, String description) {
         Tasky_Project__c proj = new Tasky_Project__c();
@@ -29,6 +30,7 @@ global class ProjectController{
         return proj;
     }
 
+    /** Update the STATUS of a Task with Id TASKID. */
     @RemoteAction
     global static Tasky_Task__c updateTaskStatus(Id taskID, String status) {
         Tasky_Task__c task = [SELECT Status__c FROM Tasky_Task__c WHERE Id =: taskId];
@@ -37,9 +39,28 @@ global class ProjectController{
         return task;
     }
 
+    /** Upserts TASK. */
     @RemoteAction
     global static Tasky_Task__c upsertTask(Tasky_Task__c task) {
         upsert task;
         return task;
+    }
+
+    /** Adds a collaborator with Id USERID to a project with Id PROJECTID. */
+    @RemoteAction
+    global static Tasky_Collaborator__c addCollaborator(Id projectId, Id userId) {
+        Tasky_Collaborator__c collaborator = new Tasky_Collaborator__c();
+        User[] users= [SELECT Name FROM User WHERE Id =: userId];
+        collaborator.Name = users[0].Name;
+        collaborator.User__c = userId;
+        collaborator.Project__c = projectId;
+        insert collaborator;
+        return collaborator;
+    }
+
+    @RemoteAction
+    global static User[] getOrgUsers() {
+        User[] users = [SELECT Name, Id FROM User];
+        return users;
     }
 }
