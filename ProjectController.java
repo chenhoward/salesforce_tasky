@@ -88,6 +88,7 @@ global class ProjectController{
         return task;
     }
 
+    /** Remove the assignee from TASK. */
     @RemoteAction
     global static Tasky_Task__c removeTaskCollaborator(Tasky_Task__c task) {
         task.Assignee__c = null;
