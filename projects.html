@@ -119,8 +119,7 @@ var getProjectCollaborators = function() {
             );
     }
 
-    
-
+    /** Gets all the Tasks in project with Id PROJECTID. */
     $scope.getTasks = function(projectId) {
         console.log('start');
         Visualforce.remoting.Manager.invokeAction(
@@ -140,6 +139,7 @@ var getProjectCollaborators = function() {
             );
     }
 
+    /** Creates a project with NAME and DESCRIPTION. */
     $scope.createProject = function(name, description) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.createProject}',
@@ -158,6 +158,7 @@ var getProjectCollaborators = function() {
             );
     }
 
+    /** Updates the STATUS of Task with Id TASKID. */
     $scope.updateTaskStatus = function(taskId, status) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.updateTaskStatus}',
@@ -177,6 +178,7 @@ var getProjectCollaborators = function() {
 
     getUserCollaborators();
 
+    /** Strips task to allow it to be inserted to database. */
     var stripTask = function(task) {
         copy = {};
         copy.Deadline__c = task.Deadline__c;
@@ -188,6 +190,7 @@ var getProjectCollaborators = function() {
         return copy;
     }
 
+    /** Upserts the TASK into the database. */
     $scope.upsertTask = function(task) {
         console.log($scope.currentProject);
         console.log(task);
@@ -207,6 +210,7 @@ var getProjectCollaborators = function() {
             );
     }
 
+    /** Returns all users in the org. */
     $scope.getOrgUsers = function() {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.getOrgUsers}',
@@ -224,6 +228,8 @@ var getProjectCollaborators = function() {
         );
     }
 
+    /** Adds a collaborator that ties the user with Id USERID to a 
+     *  Project with Id PROJECTID. */
     $scope.addCollaborator = function(projectId, userId) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.addCollaborator}',
@@ -241,6 +247,7 @@ var getProjectCollaborators = function() {
         );
     }
 
+    /** Removes the Collaborator with Id COLLABORATOR ID from a Project. */
     $scope.removeCollaborator = function(collaboratorId) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.removeCollaborator}',
