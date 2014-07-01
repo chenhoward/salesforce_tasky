@@ -41,6 +41,10 @@ applyBodyTag="false"
         <div ng-repeat="user in users" ng-click="addCollaborator(projects[0].Id, user.Id)">
             <p> {{user.Name}} </p>
         </div>
+        <h1> Current </h1>
+        <div ng-repeat="projUser in projUsers" ng-click="removeCollaborator(projUser.Id)">
+            <p> {{projUser.Name}} </p>
+        </div>
         <input ng-model="projName"></input>
         <input ng-model="description"></input>
         <button ng-click="createProject(projName, description)"> Create Project </button>
@@ -68,6 +72,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.currentTask = {};
     /** The list of all users in the org, */
     $scope.users = [];
+    $scope.projUsers = [];
 
 
     /** Takes COLLABORATORS and gets project information from them. */
@@ -76,7 +81,22 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             $scope.projects[i] = collaborators[i].Project__r;
         }
     }
-
+var getProjectCollaborators = function() {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.getProjectCollaborators}',
+            $scope.projects[0].Id,
+            function(result, event) {
+                if (event.status) {
+                    $scope.projUsers = result;
+                    $scope.$apply();
+                } else if (event.type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
+            }
+            );
+    }
 
     /** Gets all Collaborators that look up to current user. */
     var getUserCollaborators = function() {
@@ -86,6 +106,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
                 if (event.status) {
                     createProjectsFromCollaborators(result);
                     $scope.currentProject = $scope.projects[0];
+                        getProjectCollaborators();
+
 
                     $scope.$apply();
                 } else if (event.type === 'exception') {
@@ -96,6 +118,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             }
             );
     }
+
+    
 
     $scope.getTasks = function(projectId) {
         console.log('start');
@@ -216,6 +240,23 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             }
         );
     }
+
+    $scope.removeCollaborator = function(collaboratorId) {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.ProjectController.removeCollaborator}',
+            collaboratorId,
+            function(result, event) {
+                if (event.status) {
+                    console.log('Removed user');
+                } else if (event,type === 'exception') {
+                    console.log('exception');
+                } else {
+                    console.log('error');
+                }
+            }
+        );
+    }
+
     $scope.getOrgUsers();
 
 });

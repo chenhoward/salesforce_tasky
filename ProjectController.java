@@ -66,9 +66,15 @@ global class ProjectController{
     }
 
     @RemoteAction
-    global static Tasky_Collaborator__c removeCollaborator(Id projectId, Id userId) {
-        Tasky_Collaborator__c[] collaborators = [SELECT Id FROM Tasky_Collaborator__c WHERE Project__c =: projectId AND User__c =: userId];
+    global static Tasky_Collaborator__c removeCollaborator(Id collaboratorId) {
+        Tasky_Collaborator__c[] collaborators = [SELECT Id FROM Tasky_Collaborator__c WHERE Id =: collaboratorId];
         delete collaborators[0];
         return collaborators[0];
+    }
+
+    @RemoteAction
+    global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
+        Tasky_Collaborator__c[] collaborators = [SELECT Id FROM Tasky_Project__c WHERE Id =: projectId];
+        return collaborators;
     }
 }
