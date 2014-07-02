@@ -295,6 +295,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
                 getUserCollaborators();
             });
 
+           $.cometd.subscribe('/topic/TaskUpdates', function(message) {
+                $scope.getTasks($scope.projects[0].Id);
+            });
 
 });
 
