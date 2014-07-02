@@ -42,7 +42,8 @@ applyBodyTag="false"
             <p> {{user.Name}} </p>
         </div>
         <h1> Current </h1>
-        <div ng-repeat="projUser in projUsers" ng-click="removeCollaborator(projUser.Id)">
+        /** List of all collaborators in a project. */
+        <div ng-repeat="projUser in projectCollaborators" ng-click="removeCollaborator(projUser.Id)">
             <p> {{projUser.Name}} </p>
         </div>
         <input ng-model="projName"></input>
@@ -72,7 +73,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.currentTask = {};
     /** The list of all users in the org, */
     $scope.users = [];
-    $scope.projUsers = [];
+    /** List of all collaborators in a project. */
+    $scope.projectCollaborators = [];
 
 
     /** Takes COLLABORATORS and gets project information from them. */
@@ -87,7 +89,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             $scope.projects[0].Id,
             function(result, event) {
                 if (event.status) {
-                    $scope.projUsers = result;
+                    /** List of all collaborators in a project. */
+                    $scope.projectCollaborators = result;
                     $scope.$apply();
                 } else if (event.type === 'exception') {
                     console.log('exception');
