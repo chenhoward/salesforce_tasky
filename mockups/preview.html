@@ -10,7 +10,7 @@ id="todo"
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"/>
-  <apex:stylesheet value="{!URLFOR($Resource.tasky_assets, 'fonts/proximanova.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.TaskyAssets, 'fonts/proximanova.css')}"/>
   <!-- USING ROLLCALL'S FASTCLICK JUST CUZ -->
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
   <!-- LAZY ALERT YEAAAA -->
@@ -56,7 +56,6 @@ id="todo"
         $("#complete").css("display", "inline");
         $("#complete-alt").css("display", "none");
       }
-      $('#new-div').animate({"top":"100%"},100,'linear');
     }
   }
   $(document).ready(function(){
@@ -66,6 +65,11 @@ id="todo"
       $toSlide= $("#container section#"+sectionId),
       $fromSlide= $('.active');
       setSection($toSlide, $fromSlide);
+    });
+    $('.link-button').on('click', function(event)
+    {
+      $(this).css("opacity", "1");
+      $(this).parent().animate({right:"-100%"}, 200).animate({height:"0px", padding:"0px", border: "0px"}, 200);
     });
   });
   window.addEventListener('load', function() {
@@ -341,13 +345,16 @@ id="todo"
   .link {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    position: relative;
     display: block;
+    overflow: hidden;
     color: #4d4d4d;
     text-decoration: none;
     text-align: left;
     font-size: 18px;
     padding: 20px;
     height: 80px;
+    box-shadow: -1px -1px #cccccc;
     border-bottom: 1px solid #cccccc;
     background: #FFF;
     width: 100%;
@@ -420,26 +427,26 @@ id="todo"
     <div id="navbar">
       <!-- Currently no icons -->
       <a class="navbut active-tab" id="pending-tab" data-section="one" href="#">
-        <p> <img id="pending" src="{!URLFOR($Resource.tasky_assets, 'images/pending.svg')}"></img> </p>
-        <p> <img id="pending-alt" src="{!URLFOR($Resource.tasky_assets, 'images/pending-alt.svg')}"></img> </p>
+        <p> <img id="pending" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img> </p>
+        <p> <img id="pending-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/pending-alt.svg')}"></img> </p>
         <p id="pending-tag"> Pending </p>
       </a>
       <a class="navbut middle" id="doing-tab" data-section="two" href="#">
-        <p> <img id="doing" src="{!URLFOR($Resource.tasky_assets, 'images/doing.svg')}"></img> </p>
-        <p> <img id="doing-alt" src="{!URLFOR($Resource.tasky_assets, 'images/doing-alt.svg')}"></img> </p>
+        <p> <img id="doing" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img> </p>
+        <p> <img id="doing-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/doing-alt.svg')}"></img> </p>
         <p id="doing-tag"> Doing </p>
       </a>
       <a class="navbut" id="complete-tab" data-section="three" href="#">
-        <p> <img id="complete" src="{!URLFOR($Resource.tasky_assets, 'images/completed.svg')}"></img> </p>
-        <p> <img id="complete-alt" src="{!URLFOR($Resource.tasky_assets, 'images/completed-alt.svg')}"></img> </p>
+        <p> <img id="complete" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}"></img> </p>
+        <p> <img id="complete-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/completed-alt.svg')}"></img> </p>
         <p id="complete-tag"> Complete </p>
       </a>
     </div>
     <div id="project-title"> Project 1 </div>
     <div id="footer">
-      <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.tasky_assets, 'images/home.svg')}"></img></a>
-      <img class="footer-button" src="{!URLFOR($Resource.tasky_assets, 'images/new.svg')}"></img>
-      <img class="footer-button" src="{!URLFOR($Resource.tasky_assets, 'images/collabs.svg')}"></img>
+      <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
+      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}"></img>
+      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
       <div>
         <input type="checkbox" id="switch1" name="switch1" class="switch"/>
         <label for="switch1"> &nbsp; </label>
@@ -451,13 +458,13 @@ id="todo"
       <section id="one-overall" class="active overall">
         <div id="header">Taskly</div>
         <a class="link" data-section="one" href="#">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Project 1 </p>
           <p class="link-blurb"> This is a description. </p>
           <div class="arrow-right"></div>
         </a>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/howard.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
           <p class="link-title"> Project 2 </p>
           <p class="link-blurb"> This is Howard's project. </p>
           <div class="arrow-right"></div>
@@ -470,46 +477,58 @@ id="todo"
       <section id="one">
         <div class="spacer"></div>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Task 5 </p>
           <p class="link-blurb"> This is a description? </p>
-          <img class="link-button" src="{!URLFOR($Resource.tasky_assets, 'images/doing.svg')}"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
         </div>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Task 6 </p>
           <p class="link-blurb"> This is a description! </p>
-          <img class="link-button" src="{!URLFOR($Resource.tasky_assets, 'images/doing.svg')}"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
+        </div>
+        <div class="link">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
+          <p class="link-title"> Task 7 </p>
+          <p class="link-blurb"> This is a description! </p>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
         </div>
       </section>
       <section id="two">
         <div class="spacer"></div>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Task 4 </p>
           <p class="link-blurb"> This is a description. </p>
-          <img class="link-button" src="{!URLFOR($Resource.tasky_assets, 'images/completed.svg')}"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}"></img>
+        </div>
+        <div class="link">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
+          <p class="link-title"> Random Task </p>
+          <p class="link-blurb"> This is a description. </p>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}"></img>
         </div>
       </section>
       <section id="three">
         <div class="spacer"></div>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Task 3 </p>
           <p class="link-blurb"> This is a description? </p>
-          <img class="link-button" src="{!URLFOR($Resource.tasky_assets, 'images/pending.svg')}"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img>
         </div>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Task 2 </p>
           <p class="link-blurb"> This is a description! </p>
-          <img class="link-button" src="{!URLFOR($Resource.tasky_assets, 'images/pending.svg')}"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img>
         </div>
         <div class="link">
-          <img class="image" src="{!URLFOR($Resource.tasky_assets, 'images/kevin.jpg')}"></img>
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Task 1 </p>
           <p class="link-blurb"> This is a description. </p>
-          <img class="link-button" src="{!URLFOR($Resource.tasky_assets, 'images/pending.svg')}"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img>
         </div>
       </section>
     </div>
