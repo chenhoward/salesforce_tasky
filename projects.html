@@ -34,16 +34,7 @@ applyBodyTag="false"
         </div>
         <h1> Tasks </h1>
         <div ng-repeat="task in tasks">
-            <p> Name </p>
-            <input ng-model="task.Name"></input>
-            <p> Detail </p>
-            <input ng-model="task.Detail__c"></input>
-            <p> Status </p>
-            <input ng-model="task.Status__c"></input>
-            <p> Deadline </p>
-            <p> {{convertTime(task.Deadline__c)}} </p>
-            <p ng-show="task.Late__c">Late</p>
-            <button ng-click="upsertTask(task)"> Upsert </button>
+            <p ng-click="sOneNav(task.Id)"> {{task.Name}} </p>
             <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
         </div>
         <h1> End </h1>
