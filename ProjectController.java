@@ -4,7 +4,7 @@ global class ProjectController{
     /** Gets all Collaborators associated with the User. */
     @RemoteAction
     global static Tasky_Collaborator__c[] getUserCollaborators() {
-        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
+        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c, Project__r.Id FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
         return collaborators;
     }
 
