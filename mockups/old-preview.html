@@ -1,0 +1,791 @@
+<apex:page docType="html-5.0"
+sidebar="false" 
+showheader="false"
+standardStylesheets="false"
+applyHtmlTag="false"
+applyBodyTag="false"
+id="todo"
+>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+  <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
+  <apex:stylesheet value="{!URLFOR($Resource.tasky_assets, 'fonts/proximanova.css')}"/>
+  <script type="text/javascript">
+  function setSection(to, from)
+  {
+    if (!(to.hasClass("active")))
+    {
+      from.animate({"left":"-100%"},100,'linear')
+      to.animate({"left":"0%"},100,'linear',function()
+      {
+        from.css("left","100%");
+        from.removeClass("active");
+        to.addClass("active");
+      });
+      if (to.is("#one")) {
+        $("#pending-tab").addClass("active-tab");
+        $("#pending-alt").css("display", "inline");
+        $("#pending").css("display", "none");
+      }
+      if (from.is("#one")) {
+        $("#pending-tab").removeClass("active-tab");
+        $("#pending").css("display", "inline");
+        $("#pending-alt").css("display", "none");
+      }
+      if (to.is("#four")) {
+        $("#complete-tab").addClass("active-tab");
+        $("#complete-alt").css("display", "inline");
+        $("#complete").css("display", "none");
+      }
+      if (from.is("#four")) {
+        $("#complete-tab").removeClass("active-tab");
+        $("#complete").css("display", "inline");
+        $("#complete-alt").css("display", "none");
+      }
+      $('#new-div').animate({"top":"100%"},100,'linear');
+    }
+  }
+  $(document).ready(function(){
+    $('a').on('click', function(event)
+    {
+      var sectionId = $(this).attr("data-section"),
+      $toSlide= $("#container section#"+sectionId),
+      $fromSlide= $('.active');
+      setSection($toSlide, $fromSlide);
+    });
+    $('#newbut').on('click', function(event)
+    {
+      $('#new-div').animate({"top":"0%"},100,'linear');
+    });
+    $('#hide-new').on('click', function(event)
+    {
+      $('#new-div').animate({"top":"100%"},100,'linear');
+    });
+    $('#hide-checklist').on('click', function(event)
+    {
+      setSection($('#one'), $('#two'));
+    });
+  });
+  </script>
+  <title> Tasky </title>
+  <style type="text/css">
+  .repaint { -webkit-animation: bugfix infinite 1s; }
+
+  @-webkit-keyframes bugfix {
+    from { fill: 0; }
+    to { fill: 0; }
+  }
+
+  body {
+    font-family: ProximaNova, sans-serif;
+    font-weight: 300;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    overflow: hidden;
+    background: #FFF;
+  }
+
+  *:focus {
+    outline: none;
+  }
+
+  p {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  #container section {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 100%;
+    overflow: scroll;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #new-div {
+    position: fixed;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    top: 100%;
+    overflow: scroll;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #container section:nth-child(1) {
+    left: 0%;
+  }
+
+  #one {
+    z-index: 2;
+  }
+
+  #two, #three, #five {
+    z-index: 4;
+  }
+
+  .spacer {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 75px;
+    width: 100%;
+  }
+
+  #navbar {
+    position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 75px;
+    top: 0px;
+    left: 0px;
+    background: #FFF;
+    border-bottom: 1px solid #cccccc;
+  }
+
+  .navbut {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    float: left;
+    width: 33%;
+    height: 75px;
+    color: #999999;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: -1px 0px 0px #cccccc;
+    background:  #FFF;
+  }
+
+  .middle {
+    width: 34%;
+  }
+
+  #new {
+    margin-top: 13px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #newtag {
+    margin-top: -2px;
+  }
+
+  #pending {
+    display: none;
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #pending-alt {
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #pendingtag {
+    margin-top: -2px;
+  }
+
+  #complete {
+    margin-top: 5px;
+    width: 40px;
+    height: 40px;
+  }
+
+  #complete-alt {
+    display: none;
+    margin-top: 5px;
+    width: 40px;
+    height: 40px;
+  }
+
+  #completetag {
+    margin-top: -7px;
+  }
+
+  #newbut {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: fixed;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    z-index: 3;
+    width: 100%;
+    height: 75px;
+    bottom: 0px;
+    left: 0px;
+    background: #FF9D00;
+    border-top: 1px solid #cccccc;
+  }
+
+  #newbut:hover {
+    cursor: pointer;
+  }
+
+  .link {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: block;
+    color: #4d4d4d;
+    text-decoration: none;
+    text-align: left;
+    font-size: 18px;
+    padding: 16px;
+    border-bottom: 1px solid #cccccc;
+    background: #FFF;
+    width: 100%;
+  }
+
+  .link:hover {
+    cursor: pointer;
+  }
+
+  .bi-button-list {
+    float: left;
+    border-radius-top-left: 7px;
+    border-radius-bottom-left: 7px;
+    height: 43px;
+    width: 50%;
+  }
+
+  .bi-button-map {
+    float: left;
+    border-radius-top-left: 7px;
+    border-radius-bottom-left: 7px;
+    height: 43px;
+    width: 50%;
+  }
+
+  .x {
+    position: absolute;
+    z-index: 99;
+    opacity: 1;
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    padding: 20px;
+  }
+
+  .x-active {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-delay: 1.5s;
+    animation-delay: 1.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-backface-visibility: visible !important;
+    -ms-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    -webkit-animation-name: flipInY;
+    animation-name: flipInY;
+  }
+
+  .x:hover {
+    cursor: pointer;
+  }
+
+  .checklist {
+    float: left;
+    width: 38px;
+    height: 38px;
+    margin-right: 16px;
+  }
+
+  .map {
+    float: left;
+    width: 38px;
+    height: 38px;
+    margin-right: 16px;
+    margin-top: 1px;
+  }
+
+  .blurb {
+    color: #999999;
+    margin-top: -2px;
+    font-size: 14px;
+  }
+
+  .last {
+    border-bottom: 1px solid #cccccc;
+  }
+
+  .arrow-right {
+    float: right;
+    margin-top: -25px;
+    width: 10px; 
+    height: 10px;
+    -webkit-transform: rotate(45deg);
+    border-top: 3px solid #cccccc;
+    border-right: 3px solid #cccccc;
+  }
+
+  .title {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    font-weight: 500;
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-size: 24px;
+    padding: 25px;
+    padding-bottom: 24px;
+    background: #333333;
+    width: 100%;
+  }
+
+  .question {
+    overflow: auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: block;
+    color: #4d4d4d;
+    text-decoration: none;
+    text-align: left;
+    font-size: 18px;
+    padding: 16px;
+    padding-bottom: 24px;
+    box-shadow: 0px -1px 0px #cccccc;
+    background: #FFF;
+    width: 100%;
+  }
+
+  input, textarea, select {
+    font-family: ProximaNova, sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: #4d4d4d;
+    width: 80%;
+    margin-top: 16px;
+    padding: 4px;
+    padding-left: 10px;
+    outline: none;
+    border: 1px solid #999999;
+    margin-right: 20%;
+    max-width: 800px;
+    background: transparent;
+    border-radius: 5px;
+    -webkit-appearance: none;
+  }
+
+  textarea {
+    height: 150px;
+  }
+
+  select {
+    background: url("{!URLFOR($Resource.ChecklistAssets, 'arrow-bottom.png')}") no-repeat right;
+    background-size: 60px 60px;
+  }
+
+  .magic-div {
+    position: relative;
+    width: 150px;
+    height: 38px;
+    margin-top: 15px;
+  }
+
+  .toggle-spacer {
+    height: 20px;
+    width: 1px;
+  }
+
+  .check-spacer {
+    height: 16px;
+    width: 1px;
+  }
+
+  .check-label {
+    position: relative;
+    top: -10px;
+    margin-left: 10px;
+  }
+
+  input[type="number"] {
+    width: 80px;
+  }
+
+  input[type="date"] {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 48px;
+  }
+
+  input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+    background: #FFF;
+  }
+
+  input[type="checkbox"]:checked {
+    background: url("{!URLFOR($Resource.ChecklistAssets, 'check.svg')}") no-repeat center;
+    background-size: cover;
+    box-shadow: none;
+  }
+
+  .submit {
+    float: left;
+    font-family: ProximaNova, sans-serif;
+    font-weight: 500;
+    max-width: 50%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-size: 24px;
+    padding: 25px;
+    padding-bottom: 24px;
+    border-radius: 0px;
+    border: none;
+    margin: 0px;
+    background: #FF9D00;
+    width: 100%;
+  }
+
+  .save {
+    float: left;
+    font-family: ProximaNova, sans-serif;
+    font-weight: 500;
+    max-width: 50%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-size: 24px;
+    padding: 25px;
+    padding-bottom: 24px;
+    border-radius: 0px;
+    border: none;
+    margin: 0px;
+    background: #32aad2;
+    width: 50%;
+  }
+
+  .form-buttons {
+    font-family: ProximaNova, sans-serif;
+    font-weight: 500;
+    max-width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: block;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-size: 24px;
+    padding: 0pc;
+    border: none;
+    margin: 0px;
+    box-shadow: 0px -1px 0px #cccccc;
+    background: #FF9D00;
+    width: 100%;
+  }
+
+  #conclusion {
+    text-align: center;
+  }
+
+  #return {
+    font-weight: 500;
+    text-align: center;
+    color: #FFF;
+    width: 100%;
+    background: #FF9D00;
+    font-size: 24px;
+    padding: 25px;
+    padding-bottom: 24px;
+    border: none;
+    margin: 0px;
+    box-shadow: 0px -1px 0px #cccccc;
+  }
+
+  #hide {
+    display:none;
+  }
+
+  .rating input {
+    position: absolute;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 17px;
+  }
+
+  .rating span {
+    width: 24px;
+    height: 16px;
+    line-height: 16px;
+    padding: 1px 22px 1px 0; /* 1px FireFox fix */
+    background: url(http://goo.gl/SfoCPp) no-repeat -22px 0;
+  }
+
+  .rating input:checked + span {
+    background-position:-22px 0;
+  }
+
+  .rating input:checked + span ~ span {
+    background-position:0 0;
+  }
+
+  .green_text {
+    color: #FF9D00;
+  }
+
+  .active-tab {
+    border-bottom: 7px solid #FF9D00;
+    color: #FF9D00;
+  }
+
+  .flipbox {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  #back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #b3b3b3;
+  }
+
+  #back iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .error-invalid::after{
+    display: block;
+    color: #f06060;
+    padding-top: 10px;
+    content: "Invalid or required content";
+  }
+
+  .error-border {
+    border: 2px solid #f06060;
+    border-radius: 7px;
+  }
+
+  .animated {
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  @-webkit-keyframes flipInY {
+    0% {
+      -webkit-transform: rotateY(135deg);
+      transform: rotateY(135deg);
+      opacity: 0;
+    }
+
+    100% {
+      -webkit-transform: rotateY(0deg);
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes flipInY {
+    0% {
+      -webkit-transform: rotateY(135deg);
+      -ms-transform: rotateY(135deg);
+      transform: rotateY(135deg);
+      opacity: 0;
+    }
+
+    100% {
+      -webkit-transform: rotateY(0deg);
+      -ms-transform: rotateY(0deg);
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+
+  .flipInY {
+    -webkit-backface-visibility: visible !important;
+    -ms-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    -webkit-animation-name: flipInY;
+    animation-name: flipInY;
+  }
+  
+  @-webkit-keyframes flipOutY {
+    0% {
+      -webkit-transform: rotateY(0deg);
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+
+    100% {
+      -webkit-transform: rotateY(135deg);
+      transform: rotateY(135deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes flipOutY {
+    0% {
+      -webkit-transform: rotateY(0deg);
+      -ms-transform: rotateY(0deg);
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+
+    100% {
+      -webkit-transform: rotateY(135deg);
+      -ms-transform: rotateY(135deg);
+      transform: rotateY(135deg);
+      opacity: 0;
+    }
+  }
+
+  .flipOutY {
+    -webkit-backface-visibility: visible !important;
+    -ms-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    -webkit-animation-name: flipOutY;
+    animation-name: flipOutY;
+  }
+
+  html { height: 100% }
+
+  body { height: 100%; margin: 0; padding: 0 }
+  </style>
+</head>
+<body>
+  <div id="main-page">
+    <div id="navbar">
+      <!-- Currently no icons -->
+      <a class="navbut active-tab" id="pending-tab" data-section="one" href="#">
+        <p> <img id="pending" src="{!URLFOR($Resource.tasky_images, 'images/pending.svg')}"></img> </p>
+        <p> <img id="pending-alt" src="{!URLFOR($Resource.tasky_images, 'images/pending-alt.svg')}"></img> </p>
+        <p id="pendingtag"> Pending </p>
+      </a>
+      <a class="navbut middle">
+      </a>
+      <a class="navbut" id="complete-tab" data-section="four" href="#">
+        <p> <img id="complete" src="{!URLFOR($Resource.tasky_images, 'images/completed.svg')}"></img> </p>
+        <p> <img id="complete-alt" src="{!URLFOR($Resource.tasky_images, 'images/completed-alt.svg')}"></img> </p>
+        <p id="completetag"> Complete </p>
+      </a>
+    </div>
+    <div id="newbut" href="#">
+      <p> <img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img> </p>
+      <p id="newtag"> New </p>
+    </div>
+    <div id="new-div">
+      <img class="x" id="hide-new" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+      <div class="title"> New Task </div>
+      <form>
+        <div class="question">
+          <span>
+            <p> This is a paragraph line. </p>
+            <p ng-switch-when="Yes/No" class="toggle-spacer"></p>
+            <input type="number"> </input>
+            <input type="text"> </input>
+            <input type="date"> </input>
+            <textarea>Enter response here...</textarea>
+          </span>
+        </div>
+        <div class="form-buttons">
+          <input class="save last" type="button" name="save" value="Save"></input>
+          <input class="submit last" type="submit" name="submit" value="Submit"></input>
+        </div>
+      </form>
+    </div>
+    <div id="container">
+      <section id="one" class="active">
+        <div class="spacer"> </div>
+        <a class="link" data-section="two" href="#"> 
+          <img class="checklist" src="{!URLFOR($Resource.ChecklistAssets, 'checklist.svg')}"></img>
+          <p> Name </p>
+          <p class="blurb"> Description &nbsp;</p>
+          <div class="arrow-right"></div>
+        </a>
+        <div class="spacer"></div>
+      </section>
+      <section id="two">
+        <form>
+          <img class="x" id="hide-checklist" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+          <div class="title"> Title  </div>
+          <div class="question">
+            <span>
+              <p> This is a paragraph line. </p>
+              <p ng-switch-when="Yes/No" class="toggle-spacer"></p>
+              <input type="number"> </input>
+              <input type="text"> </input>
+              <input type="date"> </input>
+              <textarea>Enter response here...</textarea>
+            </span>
+          </div>
+          <div class="form-buttons">
+            <input class="save last" type="button" name="save" value="Save"></input>
+            <input class="submit last" type="submit" name="submit" value="Submit"></input>
+          </div>
+        </form>
+      </section>
+      <!--<section id="three">
+        <div class="title"> {{checklistName}} </div>
+        <div class="question">
+          <p id="conclusion"> You've just submitted a review of <span class="green_text"> {{checklistName}} </span>. </p>
+        </div>
+        <a class="link last" id="return" data-section="one" href="#"> Return </a>
+      </section>-->
+      <section id="four">
+        <div class="spacer"> </div>
+        <!--<div class="link maplink" ng-click="revealMap()">
+          <img class="map" src="{!$Resource.checklist_map}"></img>
+          <p> View Map </p>
+          <p class="blurb"> {{completedchecklistresponses.length}} Completed Checklists </p>
+        </div>-->
+        <div class="link maplink">
+          <img class="checklist" src="{!$Resource.checklist_checklist}"></img>
+          <p> Name </p>
+          <p class="blurb"> Description </p>
+        </div>
+        <div class="spacer"> </div>
+      </section>
+      <!--<section id="five">
+        <div class="title"> {{checklistName}} </div>
+        <div class="question">
+          <p id="conclusion"> You've just saved a review of <span class="green_text"> {{checklistName}} </span>. </p>
+        </div>
+        <a class="link last" id="return" data-section="one" href="#"> Return </a>
+      </section>-->
+    </div>
+  </div>
+</body>
+</html>
+</apex:page>

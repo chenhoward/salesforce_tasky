@@ -1,0 +1,39 @@
+notes
+
+Nice animation for alert system
+Order should be Pending/Doing/Done
+Doesn't enforce a linear progression - Do some more mockups
+Experiment with color of application
+Maybe easy way of showing how many tasks?
+Combine in a single toggle(Rethink new button, Reposition Me and All toggle, Way to see all members of project, Other actions)
+Ipad/tablet mockup
+
+Order should be Pending, Doing, Done
+
+
+
+Change arrow in Pending list
+
+
+
+New button is too big
+
+
+
+Change Me/App toggle position - maybe have an action bar at the bottom
+
+
+
+Keep consistent color scheme
+
+
+
+Where do I see member/collaborators on a project
+
+
+
+What's the desktop/tablet view
+
+
+
+Add # of tasks
