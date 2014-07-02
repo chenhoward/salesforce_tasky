@@ -36,6 +36,8 @@ applyBodyTag="false"
         <div ng-repeat="task in tasks">
             <p ng-click="sOneNav(task.Id)"> {{task.Name}} </p>
             <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
+            <select ng-model="task.Assignee__c" ng-options="idToNameMap[projUserId] for projUserId in projectCollaboratorsIds"></select>
+                <button ng-click="upsertTask(task)">Update Collaborator Assigned </button>
         </div>
         <h1> End </h1>
         <h1> Users </h1>
@@ -79,6 +81,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.users = [];
     /** List of all collaborators in a project. */
     $scope.projectCollaborators = [];
+    /** List of all collaborators Id's in a project. */
+    $scope.projectCollaboratorsIds = [];
+    /** Map of Ids to name. */
+    $scope.idToNameMap= {};
 
 
     $scope.sOneNav = function(Id) {
@@ -100,6 +106,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
                 if (event.status) {
                     /** List of all collaborators in a project. */
                     $scope.projectCollaborators = result;
+                    for (var i = 0; i < result.length; i++) {
+                        var tempId =  $scope.projectCollaborators[i].Id;
+                        $scope.projectCollaboratorsIds[i] = tempId;
+                        $scope.idToNameMap[tempId] = $scope.projectCollaborators[i].Name;
+                    }
                     $scope.$apply();
                 } else if (event.type === 'exception') {
                     console.log('exception');
@@ -199,6 +210,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         copy.Name = task.Name;
         copy.Project__c = task.Project__c;
         copy.Status__c = task.Status__c;
+        copy.Assignee__c = task.Assignee__c;
         return copy;
     }
 
