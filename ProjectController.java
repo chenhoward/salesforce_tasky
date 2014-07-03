@@ -4,7 +4,7 @@ global class ProjectController{
     /** Gets all Collaborators associated with the User. */
     @RemoteAction
     global static Tasky_Collaborator__c[] getUserCollaborators() {
-        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c, Project__r.Id FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
+        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c, Project__r.Id, Project__r.CreatedById FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
         return collaborators;
     }
 
@@ -77,6 +77,7 @@ global class ProjectController{
     @RemoteAction
     global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
         Tasky_Collaborator__c[] collaborators = [SELECT Id, Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        collaborators.add(0, new Tasky_Collaborator__c(Id = null));
         return collaborators;
     }
 
@@ -94,5 +95,14 @@ global class ProjectController{
         task.Assignee__c = null;
         update task;
         return task;
+    }
+    
+    @RemoteAction
+    global static String[] getPhotoes(Id[] userIds) {
+        String[] imageUrls = new List<String>();
+        for (Id userId: userIds) {
+            imageUrls.add(ConnectApi.ChatterUsers.getPhoto(null, userId).smallPhotoUrl);
+        }
+        return imageUrls;
     }
 }
