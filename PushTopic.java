@@ -1,0 +1,21 @@
+PushTopic pushTopic = new PushTopic();
+pushTopic.Name = 'ProjectUpdates';
+pushTopic.Query = 'SELECT Id, Name, Description__c FROM Tasky_Project__c';
+pushTopic.ApiVersion = 31.0;
+pushTopic.NotifyForOperationCreate = true;
+pushTopic.NotifyForOperationUpdate = true;
+pushTopic.NotifyForOperationUndelete = true;
+pushTopic.NotifyForOperationDelete = true;
+pushTopic.NotifyForFields = 'Referenced';
+insert pushTopic;
+
+PushTopic pushTopic = new PushTopic();
+pushTopic.Name = 'TaskUpdates';
+pushTopic.Query = 'SELECT Id, Name, Deadline__c, Project__c, Status__c, Assignee__c FROM Tasky_Task__c';
+pushTopic.ApiVersion = 30.0;
+pushTopic.NotifyForOperationCreate = true;
+pushTopic.NotifyForOperationUpdate = true;
+pushTopic.NotifyForOperationUndelete = true;
+pushTopic.NotifyForOperationDelete = true;
+pushTopic.NotifyForFields = 'Referenced';
+insert pushTopic;

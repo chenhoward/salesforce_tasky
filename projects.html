@@ -15,6 +15,12 @@ applyBodyTag="false"
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
   <apex:includeScript value="{!URLFOR($Resource.ChecklistAssets, 'forceTK/forceTK.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'cometd.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'json2.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'jquery.cometd.js')}"/>
+
+
+
 </head>
 </html>
 
@@ -22,18 +28,13 @@ applyBodyTag="false"
     <div ng-controller="ProjectCtrl">
         <h1> Tasky </h1>
         <p> Select a Project </p>
-        <div ng-repeat="project in projects" ng-click="getTasks(project.Id)"> 
-            <p > {{project.Name}} </p>
-            <p> {{project.Description__c}} </p>
+        <div ng-repeat="project in projects" > 
+            <p ng-click="getTasks(project.Id)"> {{project.Name}} </p>
+            <button ng-click="sOneNav(project.Id)"> Details </button>
         </div>
-        <h1> Task </h1>
+        <h1> Tasks </h1>
         <div ng-repeat="task in tasks">
-            <input ng-model="task.Name"></input>
-            <input ng-model="task.Detail__c"></input>
-            <input ng-model="task.Status__c"></input>
-            <p> {{task.Deadline__c}} </p>
-            <p ng-show="task.Late__c">Late</p>
-            <button ng-click="upsertTask(task)"> Upsert </button>
+            <p ng-click="sOneNav(task.Id)"> {{task.Name}} </p>
             <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
         </div>
         <h1> End </h1>
@@ -42,7 +43,7 @@ applyBodyTag="false"
             <p> {{user.Name}} </p>
         </div>
         <h1> Current </h1>
-        <div ng-repeat="projUser in projUsers" ng-click="removeCollaborator(projUser.Id)">
+        <div ng-repeat="projUser in projectCollaborators" ng-click="removeCollaborator(projUser.Id)">
             <p> {{projUser.Name}} </p>
         </div>
         <input ng-model="projName"></input>
@@ -56,6 +57,10 @@ applyBodyTag="false"
     </div>
 
 </body>
+
+
+
+
 
 
 <script>
@@ -72,22 +77,29 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.currentTask = {};
     /** The list of all users in the org, */
     $scope.users = [];
-    $scope.projUsers = [];
+    /** List of all collaborators in a project. */
+    $scope.projectCollaborators = [];
 
 
+    $scope.sOneNav = function(Id) {
+        sforce.one.navigateToSObject(Id);
+    }
     /** Takes COLLABORATORS and gets project information from them. */
     var createProjectsFromCollaborators = function(collaborators) {
         for(var i = 0; i < collaborators.length; i++) {
             $scope.projects[i] = collaborators[i].Project__r;
         }
     }
+
+    /** Gets all the Collaborators in a project. */
     var getProjectCollaborators = function() {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.getProjectCollaborators}',
             $scope.projects[0].Id,
             function(result, event) {
                 if (event.status) {
-                    $scope.projUsers = result;
+                    /** List of all collaborators in a project. */
+                    $scope.projectCollaborators = result;
                     $scope.$apply();
                 } else if (event.type === 'exception') {
                     console.log('exception');
@@ -266,7 +278,31 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
     $scope.getOrgUsers();
 
+    $scope.convertTime = function(time) {
+        var date = new Date(time);
+        return date.toString();
+    }
+
+            $.cometd.init({
+               url: window.location.protocol+'//'+window.location.hostname+'/cometd/24.0/',
+               requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'}
+           });
+
+           // Subscribe to a topic. JSON-encoded update will be returned
+           // in the callback
+
+           $.cometd.subscribe('/topic/ProjectUpdates', function(message) {
+                getUserCollaborators();
+            });
+
+           $.cometd.subscribe('/topic/TaskUpdates', function(message) {
+                $scope.getTasks($scope.projects[0].Id);
+            });
+
 });
 
 </script>
+
+
+
 </apex:page>
