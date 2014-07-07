@@ -494,7 +494,6 @@ body { height: 100%; margin: 0; padding: 0 }
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
       <p class="link-title"> {{task.Name}} </p>
       <p class="link-blurb"> {{task.Detail__c}} </p>
-      {{idToUrlMap[task.Assignee__r.User__c]}}
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
   </div>
     <div class="link">
