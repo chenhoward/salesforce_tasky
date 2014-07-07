@@ -1,5 +1,5 @@
 <apex:page docType="html-5.0"
-sidebar="false" 
+sidebar="false"
 showheader="false"
 standardStylesheets="false"
 Controller="ProjectController"
@@ -102,7 +102,7 @@ body {
     height: 100%;
     overflow: hidden;
     background: #FFF;
-    -webkit-animation: bugfix infinite 1s; 
+    -webkit-animation: bugfix infinite 1s;
 }
 
 *:focus {
@@ -220,7 +220,7 @@ input.switch:empty ~ label
     user-select: none;
 }
 
-input.switch:empty ~ label:before, 
+input.switch:empty ~ label:before,
 input.switch:empty ~ label:after
 {
     position: absolute;
@@ -279,7 +279,7 @@ input.switch:checked ~ label:after
 
 input.switch:empty ~ #view-state-me {
     display: inline;
-} 
+}
 
 input.switch:checked ~ #view-state-me {
     display: none;
@@ -418,7 +418,7 @@ input.switch:checked ~ #view-state-all {
 .arrow-right {
     float: right;
     margin-top: -25px;
-    width: 10px; 
+    width: 10px;
     height: 10px;
     -webkit-transform: rotate(45deg);
     border-top: 3px solid #cccccc;
@@ -453,7 +453,7 @@ body { height: 100%; margin: 0; padding: 0 }
 <div id="project-title"> Project 1 </div>
 <div id="footer">
   <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
-  <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}"></img>
+  <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" onclick="sforce.one.createRecord('Tasky_Task__c');"></img>
   <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
   <div>
     <input type="checkbox" id="switch1" name="switch1" class="switch"/>
@@ -613,13 +613,13 @@ checklistApp.controller('ProjectCtrl', function($scope) {
                     }
                     console.log(result);
                     $scope.$apply();
-                    
+
                 } else if (event.type === 'exception') {
                     console.log('exception');
                 } else {
                     console.log('error');
                 }
-            } 
+            }
             )
     }
 
@@ -648,7 +648,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     }
 
     /** Gets all Collaborators that look up to current user. */
-    var getUserCollaborators = function() { 
+    var getUserCollaborators = function() {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.getUserCollaborators}',
             function(result, event) {
@@ -786,7 +786,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             );
     }
 
-    /** Adds a collaborator that ties the user with Id USERID to a 
+    /** Adds a collaborator that ties the user with Id USERID to a
     *  Project with Id PROJECTID. */
     $scope.addCollaborator = function(projectId, userId) {
         Visualforce.remoting.Manager.invokeAction(
