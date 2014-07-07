@@ -490,7 +490,7 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="one">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks">
+    <div class="link" ng-repeat="task in tasks" ng-click="sOneNav(task.Id)">
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
       <p class="link-title"> {{task.Name}} </p>
       <p class="link-blurb"> {{task.Detail__c}} </p>
