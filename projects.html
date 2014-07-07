@@ -450,7 +450,7 @@ body { height: 100%; margin: 0; padding: 0 }
         <p id="complete-tag"> Complete </p>
     </a>
 </div>
-<div id="project-title"> Project 1 </div>
+<div id="project-title"> {{currentProject.Name}} </div>
 <div id="footer">
   <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
   <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" onclick="sforce.one.createRecord('Tasky_Task__c');"></img>
@@ -465,7 +465,7 @@ body { height: 100%; margin: 0; padding: 0 }
 <div id="container">
   <section id="one-overall" class="active overall">
     <div id="header">Taskly</div>
-    <a class="link" data-section="one" ng-click="getTasks(project.Id)" ng-repeat="project in projects">
+    <a class="link" data-section="one" ng-click="getTasks(project.Id); currentProject = project" ng-repeat="project in projects">
       <img class="image" src="{{idToUrlMap[project.CreatedById]}}"></img>
       <p class="link-title"> {{project.Name}} </p>
       <p class="link-blurb"> {{project.Description__c}} </p>
@@ -585,6 +585,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.idToUrlMap= {};
     /** Set of User Ids. */
     $scope.userIds = {};
+    /** The current project. */
+    $scope.currentProject;
 
 
     $scope.sOneNav = function(Id) {
