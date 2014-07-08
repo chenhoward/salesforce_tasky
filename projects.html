@@ -482,7 +482,7 @@ body { height: 100%; margin: 0; padding: 0 }
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
       <p class="link-title"> {{task.Name}} </p>
       <p class="link-blurb"> {{task.Detail__c}} </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
   </div>
 </section>
 <section id="two">
@@ -491,7 +491,7 @@ body { height: 100%; margin: 0; padding: 0 }
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
       <p class="link-title"> {{task.Name}} </p>
       <p class="link-blurb"> {{task.Detail__c}} </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
     </div>
 </section>
 <section id="three">
@@ -500,7 +500,7 @@ body { height: 100%; margin: 0; padding: 0 }
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
       <p class="link-title"> {{task.Name}} </p>
       <p class="link-blurb"> {{task.Detail__c}} </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
     </div>
 </section>
 </div>
@@ -674,8 +674,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             '{!$RemoteAction.ProjectController.updateTaskStatus}',
             taskId,
             status,
+            $scope.currentProject.Id,
             function(result, event) {
                 if (event.status) {
+                    $scope.tasks = resut;
+                    $scope.$apply();
                     console.log('Updated task');
                 } else if (event.type === 'exception') {
                     console.log('exception');

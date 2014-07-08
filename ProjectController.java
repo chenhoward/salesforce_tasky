@@ -30,13 +30,19 @@ global class ProjectController{
         return proj;
     }
 
-    /** Update the STATUS of a Task with Id TASKID. */
+    /** Update the STATUS of a Task with Id TASKID and returns all the tasks. */
     @RemoteAction
-    global static Tasky_Task__c updateTaskStatus(Id taskID, String status) {
-        Tasky_Task__c task = [SELECT Status__c FROM Tasky_Task__c WHERE Id =: taskId];
+    global static Tasky_Task__c[] updateTaskStatus(Id taskID, String status, Id projectId) {
+        Tasky_Task__c[] tasks = getTaks(projectId);
+        Tasky_Task__c task;
+        for (Integer i = 0; i < tasks.size(); i++) {
+            if (tasks[i].Id == taskId) {
+                task = tasks[i];
+            }
+        }
         task.Status__c = status;
         update task;
-        return task;
+        return tasks;
     }
 
     /** Upserts TASK. */
