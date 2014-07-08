@@ -456,7 +456,7 @@ body { height: 100%; margin: 0; padding: 0 }
   <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" onclick="sforce.one.createRecord('Tasky_Task__c');"></img>
   <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
   <div>
-    <input type="checkbox" id="switch1" name="switch1" class="switch"/>
+    <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
     <label for="switch1"> &nbsp; </label>
     <span id="view-state-me"> Me </span>
     <span id="view-state-all"> All </span>
@@ -545,6 +545,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.userIds = {};
     /** The current project. */
     $scope.currentProject;
+    /** Whether or not it is me. */
+    $scope.all = false;
 
 
     $scope.sOneNav = function(Id) {
