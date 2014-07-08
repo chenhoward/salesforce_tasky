@@ -495,7 +495,7 @@ body { height: 100%; margin: 0; padding: 0 }
         <p class="link-title"> {{task.Name}} </p>
         <p class="link-blurb"> {{task.Detail__c}} </p>
       </div>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
     </div>
 </section>
 <section id="three">
@@ -506,7 +506,7 @@ body { height: 100%; margin: 0; padding: 0 }
         <p class="link-title"> {{task.Name}} </p>
         <p class="link-blurb"> {{task.Detail__c}} </p>
       </div>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
     </div>
 </section>
 </div>
