@@ -478,7 +478,7 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="one">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks | listType:'Pending'">
+    <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
       <div ng-click="sOneNav(task.Id)">
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
         <p class="link-title"> {{task.Name}} </p>
@@ -489,7 +489,7 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="two">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks | listType:'Doing'" >
+    <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this" >
       <div ng-click="sOneNav(task.Id)">
         <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
         <p class="link-title"> {{task.Name}} </p>
@@ -500,7 +500,7 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="three">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks | listType:'Done'">
+    <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
       <div ng-click="sOneNav(task.Id)">
         <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
         <p class="link-title"> {{task.Name}} </p>
@@ -547,6 +547,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.currentProject;
     /** Whether or not it is me. */
     $scope.all = false;
+    /** Maps collaborators to projects. */
+    $scope.projectCollaboratorMap = {};
 
 
     $scope.sOneNav = function(Id) {
@@ -556,6 +558,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     /** Takes COLLABORATORS and gets project information from them. */
     var createProjectsFromCollaborators = function(collaborators) {
         for (var i = 0; i < collaborators.length; i++) {
+            $scope.projectCollaboratorMap[collaborators[i].Project__r.Id] = collaborators[i];
             $scope.projects[i] = collaborators[i].Project__r;
             $scope.userIds[collaborators[i].Project__r.CreatedById] = true;
         }
@@ -613,7 +616,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             function(result, event) {
                 if (event.status) {
                     createProjectsFromCollaborators(result);
-                    $scope.currentProject = $scope.projects[0];
                     getProjectCollaborators();
                     getUserImages();
                     $scope.$apply();
@@ -810,7 +812,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
        });
 
 checklistApp.filter('listType', function() {
-  return function(input, type, me) {
+  return function(input, type) {
     finalList = [];
     for (var i = 0; i < input.length; i++) {
       if (input[i].Status__c == type) {
@@ -819,6 +821,20 @@ checklistApp.filter('listType', function() {
     }
     return finalList;
 
+  }
+});
+checklistApp.filter('allFilter', function() {
+  return function(input, scope, user) {
+    finalList = [];
+    if (scope.all) {
+      return input
+    }
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].Assignee__c == scope.projectCollaboratorMap[scope.currentProject.Id].Id) {
+          finalList.push(input[i]);
+      }
+    }
+    return finalList;
   }
 });
 </script>
