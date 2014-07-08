@@ -471,18 +471,6 @@ body { height: 100%; margin: 0; padding: 0 }
       <p class="link-blurb"> {{project.Description__c}} </p>
       <div class="arrow-right"></div>
     </a>
-    <a class="link" data-section="one" href="#">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Project 1 </p>
-      <p class="link-blurb"> This is a description. </p>
-      <div class="arrow-right"></div>
-    </a>
-    <a class="link" data-section="one" href="#">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-      <p class="link-title"> Project 2 </p>
-      <p class="link-blurb"> This is Howard's project. </p>
-      <div class="arrow-right"></div>
-    </a>
   <div id="newbut" onclick="sforce.one.createRecord('Tasky_Project__c');">
       <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img></p>
       <p id="newtag"> New </p>
@@ -496,24 +484,6 @@ body { height: 100%; margin: 0; padding: 0 }
       <p class="link-blurb"> {{task.Detail__c}} </p>
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
   </div>
-    <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 5 </p>
-      <p class="link-blurb"> This is a description? </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
-  </div>
-  <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 6 </p>
-      <p class="link-blurb"> This is a description! </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
-  </div>
-  <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 7 </p>
-      <p class="link-blurb"> This is a description! </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
-  </div>
 </section>
 <section id="two">
     <div class="spacer"></div>
@@ -523,18 +493,6 @@ body { height: 100%; margin: 0; padding: 0 }
       <p class="link-blurb"> {{task.Detail__c}} </p>
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
     </div>
-    <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 4 </p>
-      <p class="link-blurb"> This is a description. </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}"></img>
-  </div>
-  <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Random Task </p>
-      <p class="link-blurb"> This is a description. </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}"></img>
-  </div>
 </section>
 <section id="three">
     <div class="spacer"></div>
@@ -544,24 +502,6 @@ body { height: 100%; margin: 0; padding: 0 }
       <p class="link-blurb"> {{task.Detail__c}} </p>
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
     </div>
-    <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 3 </p>
-      <p class="link-blurb"> This is a description? </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img>
-  </div>
-  <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 2 </p>
-      <p class="link-blurb"> This is a description! </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img>
-  </div>
-  <div class="link">
-      <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-      <p class="link-title"> Task 1 </p>
-      <p class="link-blurb"> This is a description. </p>
-      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img>
-  </div>
 </section>
 </div>
 </div>
