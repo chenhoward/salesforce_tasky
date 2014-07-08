@@ -490,7 +490,7 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="one">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks" ng-click="sOneNav(task.Id)">
+    <div class="link" ng-repeat="task in tasks | listType:'Pending'" ng-click="sOneNav(task.Id)">
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
       <p class="link-title"> {{task.Name}} </p>
       <p class="link-blurb"> {{task.Detail__c}} </p>
@@ -517,6 +517,12 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="two">
     <div class="spacer"></div>
+    <div class="link" ng-repeat="task in tasks | listType:'Doing'" ng-click="sOneNav(task.Id)">
+      <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+      <p class="link-title"> {{task.Name}} </p>
+      <p class="link-blurb"> {{task.Detail__c}} </p>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
+    </div>
     <div class="link">
       <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
       <p class="link-title"> Task 4 </p>
@@ -532,6 +538,12 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="three">
     <div class="spacer"></div>
+    <div class="link" ng-repeat="task in tasks | listType:'Done'" ng-click="sOneNav(task.Id)">
+      <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+      <p class="link-title"> {{task.Name}} </p>
+      <p class="link-blurb"> {{task.Detail__c}} </p>
+      <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img>
+    </div>
     <div class="link">
       <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
       <p class="link-title"> Task 3 </p>
@@ -848,6 +860,18 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
        });
 
+checklistApp.filter('listType', function() {
+  return function(input, type, me) {
+    finalList = [];
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].Status__c == type) {
+          finalList.push(input[i]);
+      }
+    }
+    return finalList;
+
+  }
+});
 </script>
 
 
