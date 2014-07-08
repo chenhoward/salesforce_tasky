@@ -425,6 +425,36 @@ applyBodyTag="false"
     border-right: 3px solid #cccccc;
   }
 
+.animate-enter, 
+.animate-leave
+{ 
+    -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space:nowrap;
+} 
+ 
+.animate-leave.animate-leave-active,
+.animate-enter {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+}
+ 
+.animate-enter.animate-enter-active, 
+.animate-leave {
+    opacity: 1;
+    width: 150px;
+    height: 30px;
+}
+    
+
   html { height: 100%; margin: 0; padding: 0;}
 
   body { height: 100%; margin: 0; padding: 0 }
@@ -454,7 +484,7 @@ applyBodyTag="false"
     <div id="footer">
       <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
-      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
+      <a data-section="four" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img></a>
       <div>
         <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
         <label for="switch1"> &nbsp; </label>
@@ -478,7 +508,7 @@ applyBodyTag="false"
       </section>
       <section id="one">
         <div class="spacer"></div>
-        <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
+        <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this" ng-animate="'animate'">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <p class="link-title"> {{task.Name}} </p>
@@ -489,7 +519,7 @@ applyBodyTag="false"
       </section>
       <section id="two">
         <div class="spacer"></div>
-        <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this" >
+        <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this" ng-animate="'animate'">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <p class="link-title"> {{task.Name}} </p>
@@ -500,13 +530,20 @@ applyBodyTag="false"
       </section>
       <section id="three">
         <div class="spacer"></div>
-        <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
+        <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this" ng-animate="'animate'">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <p class="link-title"> {{task.Name}} </p>
             <p class="link-blurb"> {{task.Detail__c}} </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
+        </div>
+      </section>
+      <section id="four">
+                  <div class="spacer"></div>
+
+        <div ng-repeat="projectCollaborator in projectCollaborators" class="link">
+          {{projectCollaborator.Name}}
         </div>
       </section>
     </div>
@@ -601,13 +638,15 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   }
 
   /** Gets all the Collaborators in a project. */
-  var getProjectCollaborators = function() {
+  var getProjectCollaborators = function(projectId) {
+    console.log('ran');
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.getProjectCollaborators}',
-      $scope.projects[0].Id,
+      projectId,
       function(result, event) {
         if (event.status) {
           /** List of all collaborators in a project. */
+          console.log(result);
           $scope.projectCollaborators = result;
           for (var i = 0; i < result.length; i++) {
             var tempId =  $scope.projectCollaborators[i].Id;
@@ -631,7 +670,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       function(result, event) {
         if (event.status) {
           createProjectsFromCollaborators(result);
-          getProjectCollaborators();
           getUserImages();
           $scope.$apply();
         } else if (event.type === 'exception') {
@@ -647,7 +685,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     console.log('it is');
     $scope.currentProject = project;
     setSection($('#one'), $('#one-overall'));
-
+    getProjectCollaborators(project.Id);
   }
   /** Gets all the Tasks in project with Id PROJECTID. */
   $scope.getTasks = function(projectId, transition) {
