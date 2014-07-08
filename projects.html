@@ -453,7 +453,7 @@ applyBodyTag="false"
     <div id="project-title"> {{currentProject.Name}} </div>
     <div id="footer">
       <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
-      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" onclick="sforce.one.createRecord('Tasky_Task__c');"></img>
+      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
       <div>
         <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
@@ -471,7 +471,7 @@ applyBodyTag="false"
           <p class="link-blurb"> {{project.Description__c}} </p>
           <div class="arrow-right"></div>
         </a>
-        <div id="newbut" onclick="sforce.one.createRecord('Tasky_Project__c');">
+        <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
           <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img></p>
           <p id="newtag"> New </p>
         </div>
@@ -553,7 +553,21 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Naviages to the view page of the object with ID. */
   $scope.sOneNav = function(Id) {
-    sforce.one.navigateToSObject(Id);
+    if((typeof sforce != 'undefined') && (sforce != null)) {
+      sforce.one.navigateToSObject(Id);
+    } else {
+      window.location.assign("/" + Id);
+    }
+  }
+
+  $scope.sOneCreate = function(type) {
+    if((typeof sforce != 'undefined') && (sforce != null)) {
+      sforce.one.createRecord(type);
+    } else if (type == 'Tasky_Project__c'){
+      window.location.assign('{!URLFOR($Action.Tasky_Project__c.New)}');
+    } else {
+      window.location.assign('{!URLFOR($Action.Tasky_Task__c.New)}');
+    }
   }
 
   /** Takes COLLABORATORS and gets project information from them. */
