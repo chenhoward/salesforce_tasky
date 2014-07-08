@@ -465,7 +465,7 @@ body { height: 100%; margin: 0; padding: 0 }
 <div id="container">
   <section id="one-overall" class="active overall">
     <div id="header">Taskly</div>
-    <a class="link" data-section="one" ng-click="getTasks(project.Id); currentProject = project" ng-repeat="project in projects">
+    <a class="link" data-section="one" ng-click="getTasks(project.Id); projectTransition(project);" ng-repeat="project in projects">
       <img class="image" src="{{idToUrlMap[project.CreatedById]}}"></img>
       <p class="link-title"> {{project.Name}} </p>
       <p class="link-blurb"> {{project.Description__c}} </p>
@@ -563,7 +563,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
     var getUserImages = function() {
         var keys = Object.keys($scope.userIds);
-        console.log(keys);
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.getPhotoes}',
             keys,
@@ -572,7 +571,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
                     for(var i = 0; i < result.length; i++) {
                         $scope.idToUrlMap[keys[i]] = result[i];
                     }
-                    console.log(result);
                     $scope.$apply();
 
                 } else if (event.type === 'exception') {
@@ -628,26 +626,29 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             );
     }
 
+    $scope.projectTransition = function(project) {
+      console.log('it is');
+      $scope.currentProject = project;
+      setSection($('#one'), $('#one-overall'));
+
+    }
     /** Gets all the Tasks in project with Id PROJECTID. */
-    $scope.getTasks = function(projectId) {
-        console.log('start');
+    $scope.getTasks = function(projectId, transition) {
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.ProjectController.getTasks}',
             projectId,
             function(result, event) {
                 if (event.status) {
-                    console.log(result);
                     $scope.tasks = result;
                     for (var i = 0; i < result.length; i++) {
                         var task = result[i];
                         if (task.Assignee__c) {
                           $scope.userIds[task.Assignee__r.User__c] = true;
                         }
-                        console.log($scope.userIds);
                     }
+                    console.log('here');
                     getUserImages();
                     $scope.$apply();
-                    setSection($('#one'), $('#one-overall'));
                 } else if (event.type === 'exception') {
                     console.log('exception');
                 } else {
@@ -722,7 +723,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             stripTask(task),
             function(result, event) {
                 if (event.status) {
-                    console.log('Create Task')
                 } else if (event.type === 'exception') {
                     console.log('exception');
                 } else {
@@ -759,7 +759,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             userId,
             function(result, event) {
                 if (event.status) {
-                    console.log('Added user');
                 } else if (event,type === 'exception') {
                     console.log('exception');
                 } else {
@@ -776,7 +775,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             collaboratorId,
             function(result, event) {
                 if (event.status) {
-                    console.log('Removed user');
                 } else if (event,type === 'exception') {
                     console.log('exception');
                 } else {
