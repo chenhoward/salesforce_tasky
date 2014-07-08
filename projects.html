@@ -478,28 +478,34 @@ body { height: 100%; margin: 0; padding: 0 }
 </section>
 <section id="one">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks | listType:'Pending'" ng-click="sOneNav(task.Id)">
+    <div class="link" ng-repeat="task in tasks | listType:'Pending'">
+      <div ng-click="sOneNav(task.Id)">
       <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
-      <p class="link-title"> {{task.Name}} </p>
-      <p class="link-blurb"> {{task.Detail__c}} </p>
+        <p class="link-title"> {{task.Name}} </p>
+        <p class="link-blurb"> {{task.Detail__c}} </p>
+      </div>
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
   </div>
 </section>
 <section id="two">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks | listType:'Doing'" ng-click="sOneNav(task.Id)">
-      <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
-      <p class="link-title"> {{task.Name}} </p>
-      <p class="link-blurb"> {{task.Detail__c}} </p>
+    <div class="link" ng-repeat="task in tasks | listType:'Doing'" >
+      <div ng-click="sOneNav(task.Id)">
+        <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+        <p class="link-title"> {{task.Name}} </p>
+        <p class="link-blurb"> {{task.Detail__c}} </p>
+      </div>
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
     </div>
 </section>
 <section id="three">
     <div class="spacer"></div>
-    <div class="link" ng-repeat="task in tasks | listType:'Done'" ng-click="sOneNav(task.Id)">
-      <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
-      <p class="link-title"> {{task.Name}} </p>
-      <p class="link-blurb"> {{task.Detail__c}} </p>
+    <div class="link" ng-repeat="task in tasks | listType:'Done'">
+      <div ng-click="sOneNav(task.Id)">
+        <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+        <p class="link-title"> {{task.Name}} </p>
+        <p class="link-blurb"> {{task.Detail__c}} </p>
+      </div>
       <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
     </div>
 </section>
@@ -677,7 +683,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             $scope.currentProject.Id,
             function(result, event) {
                 if (event.status) {
-                    $scope.tasks = resut;
+                    $scope.tasks = result;
                     $scope.$apply();
                     console.log('Updated task');
                 } else if (event.type === 'exception') {
