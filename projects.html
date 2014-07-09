@@ -526,6 +526,10 @@ applyBodyTag="false"
     -webkit-appearance: none;
   }
 
+  .late {
+    color: red;
+  }
+
   .animate-leave {
     position: relative;
     display: block;
@@ -616,7 +620,8 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-blurb" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-blurb late" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
         </div>
@@ -628,7 +633,8 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
+            <p class="link-blurb" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
+            <p class="link-blurb late" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
         </div>
@@ -640,7 +646,8 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
+            <p class="link-blurb" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
+            <p class="link-blurb late" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
