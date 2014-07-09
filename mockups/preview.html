@@ -17,15 +17,15 @@ id="todo"
   <script type="text/javascript">
   function setSection(to, from)
   {
+    
     if (!(to.hasClass("active")))
     {
-      from.animate({"left":"-100%"},100,'linear')
-      to.animate({"left":"0%"},100,'linear',function()
-      {
-        from.css("left","100%");
-        from.removeClass("active");
-        to.addClass("active");
-      });
+      if (to.is("#one-overall")) {
+        $("#newbut").animate({"left":"100%"}, 0);
+        $("#newbut").animate({"left":"0"},100,'linear');
+      } else {
+        $("#newbut").animate({"left":"-100%"},100,'linear');
+      }
       if (to.is("#one")) {
         $("#pending-tab").addClass("active-tab");
         $("#pending-alt").css("display", "inline");
@@ -56,6 +56,13 @@ id="todo"
         $("#complete").css("display", "inline");
         $("#complete-alt").css("display", "none");
       }
+      from.animate({"left":"-100%"},100,'linear')
+      to.animate({"left":"0%"},100,'linear',function()
+      {
+        from.css("left","100%");
+        from.removeClass("active");
+        to.addClass("active");
+      });
     }
   }
   $(document).ready(function(){
@@ -127,6 +134,7 @@ id="todo"
   }
 
   #container section:nth-child(1) {
+    position: absolute;
     left: 0%;
   }
 
@@ -165,12 +173,11 @@ id="todo"
     top: 0px;
     left: 0px;
     font-weight: 500;
-    background: #fff;
-    color: #ff9D00;
+    background: #ff9d00;
+    color: #fff;
     font-size: 24px;
     text-align: center;
     padding: 12px;
-    border-bottom: 1px solid #cccccc;
   }
 
   #footer {
@@ -182,7 +189,7 @@ id="todo"
     height: 55px;
     bottom: 0px;
     left: 0px;
-    background: #fff;
+    background: #f3f3f3;
     border-top: 1px solid #cccccc;
   }
 
@@ -224,7 +231,7 @@ id="todo"
     width: 58px;
     height: 30px;
     margin-top: 12px;
-    background-color: #ff9d00;
+    background-color: #ccc;
     border-radius: 15px;
     -webkit-transition: all 100ms ease-in;
     transition: all 100ms ease-in;
@@ -243,7 +250,7 @@ id="todo"
 
   input.switch:checked ~ label:before
   {
-    background-color: #ccc;
+    background-color: #ff9d00;
   }
 
   input.switch:checked ~ label:after
@@ -254,7 +261,7 @@ id="todo"
   #view-state-me {
     display: inline;
     float: right;
-    color: #ff9d00;
+    color: #999;
     font-size: 18px;
     margin-top: 16px;
     margin-right: 7px;
@@ -263,7 +270,7 @@ id="todo"
   #view-state-all {
     display: none;
     float: right;
-    color: #ccc;
+    color: #ff9d00;
     font-size: 18px;
     margin-top: 16px;
     margin-right: 7px;
@@ -378,11 +385,17 @@ id="todo"
     margin-top: -37px;
   }
 
+  .link-button:hover {
+    cursor: pointer;
+  }
+
   .image {
     float: left;
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
+    margin-left: -3px;
     margin-right: 16px;
+    margin-top: -2px;
   }
 
   #new {
@@ -396,7 +409,7 @@ id="todo"
   }
 
   #newbut {
-    position: absolute;
+    position: fixed;
     color: #fff;
     text-align: center;
     text-decoration: none;
