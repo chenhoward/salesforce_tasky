@@ -616,7 +616,7 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Detail__c}} &nbsp; </p>
+            <p class="link-blurb"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
         </div>
@@ -628,7 +628,7 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Detail__c}} &nbsp; </p>
+            <p class="link-blurb"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
         </div>
@@ -640,7 +640,7 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Detail__c}} &nbsp; </p>
+            <p class="link-blurb"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
@@ -692,6 +692,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.all = false;
   /** Maps projectId to Collaborators. */
   $scope.projectCollaboratorMap = {};
+  /** Whether or not to use stream updates. */
+  $scope.streamUpdate = true;
 
 
   /** Naviages to the view page of the object with ID. */
@@ -821,6 +823,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Updates the STATUS of Task with Id TASKID. */
   $scope.updateTaskStatus = function(taskId, status) {
+    $scope.streamUpdate = false;
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.updateTaskStatus}',
       taskId,
@@ -917,7 +920,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           });
 
            $.cometd.subscribe('/topic/TaskUpdates', function(message) {
-            $scope.getTasks($scope.currentProject.Id);
+            if ($scope.streamUpdate) {
+              $scope.getTasks($scope.currentProject.Id);
+            } else {
+              $scope.streamUpdate = true;
+            }
           });
 
          });
