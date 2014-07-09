@@ -1,5 +1,5 @@
 <apex:page docType="html-5.0"
-sidebar="false" 
+sidebar="false"
 showheader="false"
 standardStylesheets="false"
 Controller="ProjectController"
@@ -15,48 +15,504 @@ applyBodyTag="false"
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
   <apex:includeScript value="{!URLFOR($Resource.ChecklistAssets, 'forceTK/forceTK.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.RollCallAssets, 'fastclick/fastclick.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'cometd.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'json2.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'jquery.cometd.js')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.TaskyAssets, 'fonts/proximanova.css')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'cometd.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'json2.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'jquery.cometd.js')}"/>
 
 
 
+  <script type="text/javascript">
+  function setSection(to, from)
+  {
+    if (!(to.hasClass("active")))
+    {
+      from.animate({"left":"-100%"},100,'linear')
+      to.animate({"left":"0%"},100,'linear',function()
+      {
+        from.css("left","100%");
+        from.removeClass("active");
+        to.addClass("active");
+      });
+      if (to.is("#one")) {
+        $("#pending-tab").addClass("active-tab");
+        $("#pending-alt").css("display", "inline");
+        $("#pending").css("display", "none");
+      }
+      if (from.is("#one")) {
+        $("#pending-tab").removeClass("active-tab");
+        $("#pending").css("display", "inline");
+        $("#pending-alt").css("display", "none");
+      }
+      if (to.is("#two")) {
+        $("#doing-tab").addClass("active-tab");
+        $("#doing-alt").css("display", "inline");
+        $("#doing").css("display", "none");
+      }
+      if (from.is("#two")) {
+        $("#doing-tab").removeClass("active-tab");
+        $("#doing").css("display", "inline");
+        $("#doing-alt").css("display", "none");
+      }
+      if (to.is("#three")) {
+        $("#complete-tab").addClass("active-tab");
+        $("#complete-alt").css("display", "inline");
+        $("#complete").css("display", "none");
+      }
+      if (from.is("#three")) {
+        $("#complete-tab").removeClass("active-tab");
+        $("#complete").css("display", "inline");
+        $("#complete-alt").css("display", "none");
+      }
+    }
+  }
+  $(document).ready(function(){
+    $('a').on('click', function(event)
+    {
+      var sectionId = $(this).attr("data-section"),
+      $toSlide= $("#container section#"+sectionId),
+      $fromSlide= $('.active');
+      setSection($toSlide, $fromSlide);
+    });
+    $('.link-button').on('click', function(event)
+    {
+      $(this).css("opacity", "1");
+      $(this).parent().animate({right:"-100%"}, 200).animate({height:"0px", padding:"0px", border: "0px"}, 200);
+    });
+  });
+  window.addEventListener('load', function() {
+    FastClick.attach(document.body);
+  }, false);
+  </script>
+  <style type="text/css">
+  @-webkit-keyframes bugfix {
+    from { fill: 0; }
+    to { fill: 0; }
+  }
+
+  ::-webkit-scrollbar { width: 0 !important }
+
+  body {
+    font-family: ProximaNova, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    color: #333;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    overflow: hidden;
+    background: #FFF;
+    -webkit-animation: bugfix infinite 1s;
+  }
+
+  *:focus {
+    outline: none;
+  }
+
+  p {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  #container section {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 100%;
+    overflow: scroll;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #container section:nth-child(1) {
+    left: 0%;
+  }
+
+  .overall {
+    z-index: 4;
+  }
+
+  #header {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 100px;
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    padding-top: 30px;
+    font-size: 36px;
+    font-weight: 700;
+    color: #ff9d00;
+    text-align: center;
+  }
+
+  .spacer {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 135px;
+    width: 100%;
+  }
+
+  #project-title {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 55px;
+    top: 0px;
+    left: 0px;
+    font-weight: 500;
+    background: #fff;
+    color: #ff9D00;
+    font-size: 24px;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #cccccc;
+  }
+
+  #footer {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 55px;
+    bottom: 0px;
+    left: 0px;
+    background: #fff;
+    border-top: 1px solid #cccccc;
+  }
+
+  .footer-button {
+    float: left;
+    width: 41px;
+    height: 41px;
+    margin: 7px;
+    margin-right: 10px;
+    margin-left: 15px;
+  }
+
+  input.switch:empty
+  {
+    margin-left: -9999px;
+  }
+
+  input.switch:empty ~ label
+  {
+    position: relative;
+    float: right;
+    text-indent: 69px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  input.switch:empty ~ label:before,
+  input.switch:empty ~ label:after
+  {
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    content: ' ';
+    width: 58px;
+    height: 30px;
+    margin-top: 12px;
+    background-color: #ff9d00;
+    border-radius: 15px;
+    -webkit-transition: all 100ms ease-in;
+    transition: all 100ms ease-in;
+  }
+
+  input.switch:empty ~ label:after
+  {
+    width: 26px;
+    height: 26px;
+    top: 2px;
+    bottom: 2px;
+    margin-left: 2px;
+    background-color: #fff;
+    border-radius: 13px;
+  }
+
+  input.switch:checked ~ label:before
+  {
+    background-color: #ccc;
+  }
+
+  input.switch:checked ~ label:after
+  {
+    margin-left: 30px;
+  }
+
+  #view-state-me {
+    display: inline;
+    float: right;
+    color: #ff9d00;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-right: 7px;
+  }
+
+  #view-state-all {
+    display: none;
+    float: right;
+    color: #ccc;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-right: 7px;
+  }
+
+  input.switch:empty ~ #view-state-me {
+    display: inline;
+  }
+
+  input.switch:checked ~ #view-state-me {
+    display: none;
+  }
+
+  input.switch:empty ~ #view-state-all {
+    display: none;
+  }
+
+  input.switch:checked ~ #view-state-all {
+    display: inline;
+  }
+
+  #navbar {
+    position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 80px;
+    top: 55px;
+    left: 0px;
+    background: #FFF;
+    border-bottom: 1px solid #cccccc;
+  }
+
+  .navbut {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    float: left;
+    width: 33%;
+    height: 80px;
+    color: #999999;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: -1px 0px 0px #cccccc;
+    background:  #FFF;
+  }
+
+  .middle {
+    width: 34%;
+  }
+
+  #pending {
+    display: none;
+  }
+
+  #doing-alt, #complete-alt {
+    display: none;
+  }
+
+  #pending, #doing, #complete {
+    margin-top: 9px;
+    width: 40px;
+    height: 40px;
+  }
+
+  #pending-alt, #doing-alt, #complete-alt {
+    margin-top: 9px;
+    width: 40px;
+    height: 40px;
+  }
+
+  #pending-tag, #doing-tag, #complete-tag {
+    margin-top: -7px;
+  }
+
+  .active-tab {
+    border-bottom: 7px solid #FF9D00;
+    color: #FF9D00;
+  }
+
+  .link {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    color: #4d4d4d;
+    text-decoration: none;
+    text-align: left;
+    font-size: 18px;
+    padding: 20px;
+    height: 80px;
+    box-shadow: -1px -1px #cccccc;
+    border-bottom: 1px solid #cccccc;
+    background: #FFF;
+    width: 100%;
+  }
+
+  .link-title {
+    padding-top: 2px;
+  }
+
+  .link-blurb {
+    color: #999999;
+    margin-top: -2px;
+    font-size: 14px;
+  }
+
+  .link-button {
+    float: right;
+    opacity: 0.5;
+    height: 40px;
+    width: 40px;
+    margin-top: -37px;
+  }
+
+  .image {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
+  }
+
+  #new {
+    margin-top: 15px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #newtag {
+    margin-top: -2px;
+  }
+
+  #newbut {
+    position: absolute;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    height: 80px;
+    bottom: 0;
+    left: 0px;
+    background: #FF9D00;
+  }
+
+  .arrow-right {
+    float: right;
+    margin-top: -25px;
+    width: 10px;
+    height: 10px;
+    -webkit-transform: rotate(45deg);
+    border-top: 3px solid #cccccc;
+    border-right: 3px solid #cccccc;
+  }
+
+  html { height: 100%; margin: 0; padding: 0;}
+
+  body { height: 100%; margin: 0; padding: 0 }
+  </style>
 </head>
-</html>
-
-<body>
-    <div ng-controller="ProjectCtrl">
-        <h1> Tasky </h1>
-        <p> Select a Project </p>
-        <div ng-repeat="project in projects" > 
-            <p ng-click="getTasks(project.Id)"> {{project.Name}} </p>
-            <button ng-click="sOneNav(project.Id)"> Details </button>
-        </div>
-        <h1> Tasks </h1>
-        <div ng-repeat="task in tasks">
-            <p ng-click="sOneNav(task.Id)"> {{task.Name}} </p>
-            <button ng-click="updateTaskStatus(task.Id, task.Status__c)"> Update Status </button>
-        </div>
-        <h1> End </h1>
-        <h1> Users </h1>
-        <div ng-repeat="user in users" ng-click="addCollaborator(projects[0].Id, user.Id)">
-            <p> {{user.Name}} </p>
-        </div>
-        <h1> Current </h1>
-        <div ng-repeat="projUser in projectCollaborators" ng-click="removeCollaborator(projUser.Id)">
-            <p> {{projUser.Name}} </p>
-        </div>
-        <input ng-model="projName"></input>
-        <input ng-model="description"></input>
-        <button ng-click="createProject(projName, description)"> Create Project </button>
-        <input ng-model="currentTask.Name"></input>
-        <input ng-model="currentTask.Detail__c"></input>
-        <input type="datetime" ng-model="currentTask.Deadline__c"></input>
-        <button ng-click="upsertTask(currentTask)"> Create Task </button>
-
+<body ng-app="taskyApp">
+  <div id="main-page" ng-controller="ProjectCtrl">
+    <div id="navbar">
+      <!-- Currently no icons -->
+      <a class="navbut active-tab" id="pending-tab" data-section="one" href="#">
+        <p> <img id="pending" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img> </p>
+        <p> <img id="pending-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/pending-alt.svg')}"></img> </p>
+        <p id="pending-tag"> Pending </p>
+      </a>
+      <a class="navbut middle" id="doing-tab" data-section="two" href="#">
+        <p> <img id="doing" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}"></img> </p>
+        <p> <img id="doing-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/doing-alt.svg')}"></img> </p>
+        <p id="doing-tag"> Doing </p>
+      </a>
+      <a class="navbut" id="complete-tab" data-section="three" href="#">
+        <p> <img id="complete" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}"></img> </p>
+        <p> <img id="complete-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/completed-alt.svg')}"></img> </p>
+        <p id="complete-tag"> Complete </p>
+      </a>
     </div>
-
+    <div id="project-title"> {{currentProject.Name}} </div>
+    <div id="footer">
+      <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
+      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
+      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
+      <div>
+        <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
+        <label for="switch1"> &nbsp; </label>
+        <span id="view-state-me"> Me </span>
+        <span id="view-state-all"> All </span>
+      </div>
+    </div>
+    <div id="container">
+      <section id="one-overall" class="active overall">
+        <div id="header">Taskly</div>
+        <a class="link" data-section="one" ng-click="getTasks(project.Id); projectTransition(project);" ng-repeat="project in projects">
+          <img class="image" src="{{idToUrlMap[project.CreatedById]}}"></img>
+          <p class="link-title"> {{project.Name}} </p>
+          <p class="link-blurb"> {{project.Description__c}} </p>
+          <div class="arrow-right"></div>
+        </a>
+        <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
+          <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img></p>
+          <p id="newtag"> New </p>
+        </div>
+      </section>
+      <section id="one">
+        <div class="spacer"></div>
+        <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
+          <div ng-click="sOneNav(task.Id)">
+            <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <p class="link-title"> {{task.Name}} </p>
+            <p class="link-blurb"> {{task.Detail__c}} </p>
+          </div>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
+        </div>
+      </section>
+      <section id="two">
+        <div class="spacer"></div>
+        <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this" >
+          <div ng-click="sOneNav(task.Id)">
+            <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <p class="link-title"> {{task.Name}} </p>
+            <p class="link-blurb"> {{task.Detail__c}} </p>
+          </div>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
+        </div>
+      </section>
+      <section id="three">
+        <div class="spacer"></div>
+        <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
+          <div ng-click="sOneNav(task.Id)">
+            <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <p class="link-title"> {{task.Name}} </p>
+            <p class="link-blurb"> {{task.Detail__c}} </p>
+          </div>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
+        </div>
+      </section>
+    </div>
+  </div>
 </body>
+</html>
 
 
 
@@ -69,240 +525,285 @@ var checklistApp = angular.module('taskyApp', []);
 
 checklistApp.controller('ProjectCtrl', function($scope) {
 
-    /** An array of Projects. */
-    $scope.projects = [];
-    /** An array of Tasks. */
-    $scope.tasks = [];
-    /** The current task we are reviewing. */
-    $scope.currentTask = {};
-    /** The list of all users in the org, */
-    $scope.users = [];
-    /** List of all collaborators in a project. */
-    $scope.projectCollaborators = [];
+  /** An array of Projects. */
+  $scope.projects = [];
+  /** An array of Tasks. */
+  $scope.tasks = [];
+  /** The current task we are reviewing. */
+  $scope.currentTask = {};
+  /** The list of all users in the org, */
+  $scope.users = [];
+  /** List of all collaborators in a project. */
+  $scope.projectCollaborators = [];
+  /** List of all collaborators Id's in a project. */
+  $scope.projectCollaboratorsIds = [];
+  /** Map of Ids to name. */
+  $scope.idToNameMap= {};
+  /** Map of Ids to Url. */
+  $scope.idToUrlMap= {};
+  /** Set of User Ids. */
+  $scope.userIds = {};
+  /** The current project. */
+  $scope.currentProject;
+  /** Whether or not it is me. */
+  $scope.all = false;
+  /** Maps projectId to Collaborators. */
+  $scope.projectCollaboratorMap = {};
 
 
-    $scope.sOneNav = function(Id) {
-        sforce.one.navigateToSObject(Id);
+  /** Naviages to the view page of the object with ID. */
+  $scope.sOneNav = function(Id) {
+    if((typeof sforce != 'undefined') && (sforce != null)) {
+      sforce.one.navigateToSObject(Id);
+    } else {
+      window.location.assign("/" + Id);
     }
-    /** Takes COLLABORATORS and gets project information from them. */
-    var createProjectsFromCollaborators = function(collaborators) {
-        for(var i = 0; i < collaborators.length; i++) {
-            $scope.projects[i] = collaborators[i].Project__r;
+  }
+
+  $scope.sOneCreate = function(type) {
+    if((typeof sforce != 'undefined') && (sforce != null)) {
+      sforce.one.createRecord(type);
+    } else if (type == 'Tasky_Project__c'){
+      window.location.assign('{!URLFOR($Action.Tasky_Project__c.New)}');
+    } else {
+      window.location.assign('{!URLFOR($Action.Tasky_Task__c.New)}');
+    }
+  }
+
+  /** Takes COLLABORATORS and gets project information from them. */
+  var createProjectsFromCollaborators = function(collaborators) {
+    for (var i = 0; i < collaborators.length; i++) {
+      $scope.projectCollaboratorMap[collaborators[i].Project__r.Id] = collaborators[i];
+      $scope.projects[i] = collaborators[i].Project__r;
+      $scope.userIds[collaborators[i].Project__r.CreatedById] = true;
+    }
+  }
+
+  var getUserImages = function() {
+    var keys = Object.keys($scope.userIds);
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.getPhotoes}',
+      keys,
+      function(result, event) {
+        if (event.status) {
+          for(var i = 0; i < result.length; i++) {
+            $scope.idToUrlMap[keys[i]] = result[i];
+          }
+          $scope.$apply();
+
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
         }
-    }
+      }
+      )
+  }
 
-    /** Gets all the Collaborators in a project. */
-    var getProjectCollaborators = function() {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.getProjectCollaborators}',
-            $scope.projects[0].Id,
-            function(result, event) {
-                if (event.status) {
-                    /** List of all collaborators in a project. */
-                    $scope.projectCollaborators = result;
-                    $scope.$apply();
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
+  /** Gets all the Collaborators in a project. */
+  var getProjectCollaborators = function() {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.getProjectCollaborators}',
+      $scope.projects[0].Id,
+      function(result, event) {
+        if (event.status) {
+          /** List of all collaborators in a project. */
+          $scope.projectCollaborators = result;
+          for (var i = 0; i < result.length; i++) {
+            var tempId =  $scope.projectCollaborators[i].Id;
+            $scope.projectCollaboratorsIds[i] = tempId;
+            $scope.idToNameMap[tempId] = $scope.projectCollaborators[i].Name;
+          }
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
+        }
+      }
+      );
+  }
+
+  /** Gets all Collaborators that look up to current user. */
+  var getUserCollaborators = function() {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.getUserCollaborators}',
+      function(result, event) {
+        if (event.status) {
+          createProjectsFromCollaborators(result);
+          getProjectCollaborators();
+          getUserImages();
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
+        }
+      }
+      );
+  }
+
+  $scope.projectTransition = function(project) {
+    console.log('it is');
+    $scope.currentProject = project;
+    setSection($('#one'), $('#one-overall'));
+
+  }
+  /** Gets all the Tasks in project with Id PROJECTID. */
+  $scope.getTasks = function(projectId, transition) {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.getTasks}',
+      projectId,
+      function(result, event) {
+        if (event.status) {
+          $scope.tasks = result;
+          for (var i = 0; i < result.length; i++) {
+            var task = result[i];
+            if (task.Assignee__c) {
+              $scope.userIds[task.Assignee__r.User__c] = true;
             }
-            );
-    }
+          }
+          console.log('here');
+          getUserImages();
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
+        }
+      }
+      );
+  }
 
-    /** Gets all Collaborators that look up to current user. */
-    var getUserCollaborators = function() {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.getUserCollaborators}',
-            function(result, event) {
-                if (event.status) {
-                    createProjectsFromCollaborators(result);
-                    $scope.currentProject = $scope.projects[0];
-                    getProjectCollaborators();
+  /** Updates the STATUS of Task with Id TASKID. */
+  $scope.updateTaskStatus = function(taskId, status) {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.updateTaskStatus}',
+      taskId,
+      status,
+      $scope.currentProject.Id,
+      function(result, event) {
+        if (event.status) {
+          $scope.tasks = result;
+          $scope.$apply();
+          console.log('Updated task');
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
+        }
+      }
+      );
+  }
+
+  getUserCollaborators();
 
 
-                    $scope.$apply();
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
-    }
 
-    /** Gets all the Tasks in project with Id PROJECTID. */
-    $scope.getTasks = function(projectId) {
-        console.log('start');
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.getTasks}',
-            projectId,
-            function(result, event) {
-                if (event.status) {
-                    console.log(result);
-                    $scope.tasks = result;
-                    $scope.$apply();
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
-    }
 
-    /** Creates a project with NAME and DESCRIPTION. */
-    $scope.createProject = function(name, description) {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.createProject}',
-            name,
-            description,
-            function(result, event) {
-                if (event.status) {
-                    console.log('Create Project')
-                    $scope.$apply();
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
-    }
+  /** Returns all users in the org. */
+  $scope.getOrgUsers = function() {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.getOrgUsers}',
+      function(result, event) {
+        if (event.status) {
+          $scope.users = result;
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
+          console.log(event.message);
+        }
+      }
+      );
+  }
 
-    /** Updates the STATUS of Task with Id TASKID. */
-    $scope.updateTaskStatus = function(taskId, status) {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.updateTaskStatus}',
-            taskId,
-            status,
-            function(result, event) {
-                if (event.status) {
-                    console.log('Updated task');
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
-    }
-
-    getUserCollaborators();
-
-    /** Strips task to allow it to be inserted to database. */
-    var stripTask = function(task) {
-        copy = {};
-        copy.Deadline__c = task.Deadline__c;
-        copy.Detail__c = task.Detail__c;
-        copy.Id = task.Id;
-        copy.Name = task.Name;
-        copy.Project__c = task.Project__c;
-        copy.Status__c = task.Status__c;
-        return copy;
-    }
-
-    /** Upserts the TASK into the database. */
-    $scope.upsertTask = function(task) {
-        console.log($scope.currentProject);
-        console.log(task);
-        task.Project__c = $scope.currentProject.Id;
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.upsertTask}',
-            stripTask(task),
-            function(result, event) {
-                if (event.status) {
-                    console.log('Create Task')
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
-    }
-
-    /** Returns all users in the org. */
-    $scope.getOrgUsers = function() {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.getOrgUsers}',
-            function(result, event) {
-                if (event.status) {
-                    $scope.users = result;
-                    $scope.$apply();
-                } else if (event.type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                    console.log(event.message);
-                }
-            }
-            );
-    }
-
-    /** Adds a collaborator that ties the user with Id USERID to a 
+    /** Adds a collaborator that ties the user with Id USERID to a
     *  Project with Id PROJECTID. */
     $scope.addCollaborator = function(projectId, userId) {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.addCollaborator}',
-            projectId,
-            userId,
-            function(result, event) {
-                if (event.status) {
-                    console.log('Added user');
-                } else if (event,type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
+      Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.ProjectController.addCollaborator}',
+        projectId,
+        userId,
+        function(result, event) {
+          if (event.status) {
+          } else if (event,type === 'exception') {
+            console.log('exception');
+          } else {
+            console.log('error');
+          }
+        }
+        );
     }
 
     /** Removes the Collaborator with Id COLLABORATOR ID from a Project. */
     $scope.removeCollaborator = function(collaboratorId) {
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.ProjectController.removeCollaborator}',
-            collaboratorId,
-            function(result, event) {
-                if (event.status) {
-                    console.log('Removed user');
-                } else if (event,type === 'exception') {
-                    console.log('exception');
-                } else {
-                    console.log('error');
-                }
-            }
-            );
+      Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.ProjectController.removeCollaborator}',
+        collaboratorId,
+        function(result, event) {
+          if (event.status) {
+          } else if (event,type === 'exception') {
+            console.log('exception');
+          } else {
+            console.log('error');
+          }
+        }
+        );
     }
 
     $scope.getOrgUsers();
 
     $scope.convertTime = function(time) {
-        var date = new Date(time);
-        return date.toString();
+      var date = new Date(time);
+      return date.toString();
     }
 
-            $.cometd.init({
-               url: window.location.protocol+'//'+window.location.hostname+'/cometd/24.0/',
-               requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'}
-           });
+    $.cometd.init({
+     url: window.location.protocol+'//'+window.location.hostname+'/cometd/24.0/',
+     requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'}
+   });
 
            // Subscribe to a topic. JSON-encoded update will be returned
            // in the callback
 
            $.cometd.subscribe('/topic/ProjectUpdates', function(message) {
-                getUserCollaborators();
-            });
+            getUserCollaborators();
+          });
 
            $.cometd.subscribe('/topic/TaskUpdates', function(message) {
-                $scope.getTasks($scope.projects[0].Id);
-            });
+            $scope.getTasks($scope.projects[0].Id);
+          });
 
+         });
+
+checklistApp.filter('listType', function() {
+  return function(input, type) {
+    finalList = [];
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].Status__c == type) {
+        finalList.push(input[i]);
+      }
+    }
+    return finalList;
+
+  }
 });
-
+checklistApp.filter('allFilter', function() {
+  return function(input, scope, user) {
+    finalList = [];
+    if (scope.all) {
+      return input
+    }
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].Assignee__c == scope.projectCollaboratorMap[scope.currentProject.Id].Id) {
+        finalList.push(input[i]);
+      }
+    }
+    return finalList;
+  }
+});
 </script>
-
-
 
 </apex:page>

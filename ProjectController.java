@@ -4,14 +4,14 @@ global class ProjectController{
     /** Gets all Collaborators associated with the User. */
     @RemoteAction
     global static Tasky_Collaborator__c[] getUserCollaborators() {
-        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c, Project__r.Id FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
+        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c, Project__r.Id, Project__r.CreatedById FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
         return collaborators;
     }
 
     /** Gets all Tasks associated with the Project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Task__c[] getTasks(Id projectId) {
-        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Deadline__c, Detail__c, Late__c, Status__c FROM Tasky_Task__c WHERE Project__c =: projectId];
+        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Assignee__r.User__c FROM Tasky_Task__c WHERE Project__c =: projectId];
         return tasks;
     }
 
@@ -30,13 +30,19 @@ global class ProjectController{
         return proj;
     }
 
-    /** Update the STATUS of a Task with Id TASKID. */
+    /** Update the STATUS of a Task with Id TASKID and returns all the tasks. */
     @RemoteAction
-    global static Tasky_Task__c updateTaskStatus(Id taskID, String status) {
-        Tasky_Task__c task = [SELECT Status__c FROM Tasky_Task__c WHERE Id =: taskId];
+    global static Tasky_Task__c[] updateTaskStatus(Id taskID, String status, Id projectId) {
+        Tasky_Task__c[] tasks = getTaks(projectId);
+        Tasky_Task__c task;
+        for (Integer i = 0; i < tasks.size(); i++) {
+            if (tasks[i].Id == taskId) {
+                task = tasks[i];
+            }
+        }
         task.Status__c = status;
         update task;
-        return task;
+        return tasks;
     }
 
     /** Upserts TASK. */
@@ -77,6 +83,7 @@ global class ProjectController{
     @RemoteAction
     global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
         Tasky_Collaborator__c[] collaborators = [SELECT Id, Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        collaborators.add(0, new Tasky_Collaborator__c(Id = null));
         return collaborators;
     }
 
@@ -94,5 +101,14 @@ global class ProjectController{
         task.Assignee__c = null;
         update task;
         return task;
+    }
+    
+    @RemoteAction
+    global static String[] getPhotoes(Id[] userIds) {
+        String[] imageUrls = new List<String>();
+        for (Id userId: userIds) {
+            imageUrls.add(ConnectApi.ChatterUsers.getPhoto(null, userId).smallPhotoUrl);
+        }
+        return imageUrls;
     }
 }
