@@ -498,7 +498,7 @@ applyBodyTag="false"
         <a class="link" data-section="one" ng-click="getTasks(project.Id); projectTransition(project);" ng-repeat="project in projects">
           <img class="image" src="{{idToUrlMap[project.CreatedById]}}"></img>
           <p class="link-title"> {{project.Name}} </p>
-          <p class="link-blurb"> {{project.Description__c}} </p>
+          <p class="link-blurb"> {{project.Description__c}} &nbsp;</p>
           <div class="arrow-right"></div>
         </a>
         <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
@@ -811,7 +811,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           });
 
            $.cometd.subscribe('/topic/TaskUpdates', function(message) {
-            $scope.getTasks($scope.projects[0].Id);
+            $scope.getTasks($scope.currentProject.Id);
           });
 
          });
