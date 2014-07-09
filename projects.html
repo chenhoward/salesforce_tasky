@@ -510,7 +510,8 @@ applyBodyTag="false"
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this" ng-animate="'animate'">
           <div ng-click="sOneNav(task.Id)">
-            <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
             <p class="link-blurb"> {{task.Detail__c}} </p>
           </div>
@@ -521,7 +522,8 @@ applyBodyTag="false"
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this" ng-animate="'animate'">
           <div ng-click="sOneNav(task.Id)">
-            <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
             <p class="link-blurb"> {{task.Detail__c}} </p>
           </div>
@@ -532,7 +534,8 @@ applyBodyTag="false"
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this" ng-animate="'animate'">
           <div ng-click="sOneNav(task.Id)">
-            <img class="image" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
+            <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
             <p class="link-blurb"> {{task.Detail__c}} </p>
           </div>
