@@ -591,7 +591,7 @@ applyBodyTag="false"
     <div id="footer">
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}" ng-click="sOneNav(currentProject.Id)"></img>
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
-      <a data-section="four" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img></a>
+      <img id="collab-button" class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
       <div>
         <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
         <label for="switch1"> &nbsp; </label>
@@ -652,13 +652,43 @@ applyBodyTag="false"
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
       </section>
-      <section id="four">
-                  <div class="spacer"></div>
-
-        <div ng-repeat="projectCollaborator in projectCollaborators" class="link">
-          {{projectCollaborator.Name}}
+     <div id="collab">
+        <img class="x" id="hide-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        <div class="normal-title"> Collaborators </div>
+        <div class="link">
+          <input type="text" id="add-collab-input" placeholder="Search for a person..."/>
         </div>
-      </section>
+        <div class="link">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
+          <p class="link-title"> Kevin Wu </p>
+          <p class="link-blurb"> Front-End Web Design Intern </p>
+          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
+          <p class="link-title"> Howard Chen </p>
+          <p class="link-blurb"> Front-End Web Design Intern </p>
+          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          <p class="link-title"> Haward Chen </p>
+          <p class="link-blurb"> Someone That Does Stuff </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          <p class="link-title"> Huward Chen </p>
+          <p class="link-blurb"> Interning Intern </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          <p class="link-title"> Heward Chen </p>
+          <p class="link-blurb"> Potato Eater </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+      </div>
     </div>
   </div>
 </body>
