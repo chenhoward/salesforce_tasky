@@ -25,6 +25,12 @@ applyBodyTag="false"
   <script type="text/javascript">
   function setSection(to, from)
   {
+    if (to.is("#one-overall")) {
+        $("#newbut").animate({"left":"100%"}, 0);
+        $("#newbut").animate({"left":"0"},100,'linear');
+      } else {
+        $("#newbut").animate({"left":"-100%"},100,'linear');
+      }
     if (!(to.hasClass("active")))
     {
       from.animate({"left":"-100%"},100,'linear')
@@ -102,7 +108,7 @@ applyBodyTag="false"
     height: 100%;
     overflow: hidden;
     background: #FFF;
-    -webkit-animation: bugfix infinite 1s;
+    -webkit-animation: bugfix infinite 1s; 
   }
 
   *:focus {
@@ -135,6 +141,7 @@ applyBodyTag="false"
   }
 
   #container section:nth-child(1) {
+    position: absolute;
     left: 0%;
   }
 
@@ -173,12 +180,25 @@ applyBodyTag="false"
     top: 0px;
     left: 0px;
     font-weight: 500;
-    background: #fff;
-    color: #ff9D00;
+    background: #ff9d00;
+    color: #fff;
     font-size: 24px;
     text-align: center;
     padding: 12px;
-    border-bottom: 1px solid #cccccc;
+  }
+
+  .normal-title {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 55px;
+    font-weight: 500;
+    background: #ff9d00;
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    padding: 12px;
   }
 
   #footer {
@@ -190,7 +210,7 @@ applyBodyTag="false"
     height: 55px;
     bottom: 0px;
     left: 0px;
-    background: #fff;
+    background: #f3f3f3;
     border-top: 1px solid #cccccc;
   }
 
@@ -220,7 +240,7 @@ applyBodyTag="false"
     user-select: none;
   }
 
-  input.switch:empty ~ label:before,
+  input.switch:empty ~ label:before, 
   input.switch:empty ~ label:after
   {
     position: absolute;
@@ -232,7 +252,7 @@ applyBodyTag="false"
     width: 58px;
     height: 30px;
     margin-top: 12px;
-    background-color: #ff9d00;
+    background-color: #ccc;
     border-radius: 15px;
     -webkit-transition: all 100ms ease-in;
     transition: all 100ms ease-in;
@@ -251,7 +271,7 @@ applyBodyTag="false"
 
   input.switch:checked ~ label:before
   {
-    background-color: #ccc;
+    background-color: #ff9d00;
   }
 
   input.switch:checked ~ label:after
@@ -262,7 +282,7 @@ applyBodyTag="false"
   #view-state-me {
     display: inline;
     float: right;
-    color: #ff9d00;
+    color: #999;
     font-size: 18px;
     margin-top: 16px;
     margin-right: 7px;
@@ -271,7 +291,7 @@ applyBodyTag="false"
   #view-state-all {
     display: none;
     float: right;
-    color: #ccc;
+    color: #ff9d00;
     font-size: 18px;
     margin-top: 16px;
     margin-right: 7px;
@@ -279,7 +299,7 @@ applyBodyTag="false"
 
   input.switch:empty ~ #view-state-me {
     display: inline;
-  }
+  } 
 
   input.switch:checked ~ #view-state-me {
     display: none;
@@ -386,11 +406,32 @@ applyBodyTag="false"
     margin-top: -37px;
   }
 
+  .link-button:hover {
+    cursor: pointer;
+  }
+
+  #add-collab-button {
+    float: right;
+    margin-top: 3px;
+    height: 18px;
+    width: 18px;
+    padding: 8px;
+    border-radius: 17px;
+    -webkit-transform: rotate(45deg);
+    background: #ff9d00;
+  }
+
+  #add-collab-button:hover {
+    cursor: pointer;
+  }
+
   .image {
     float: left;
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
+    margin-left: -3px;
     margin-right: 16px;
+    margin-top: -2px;
   }
 
   #new {
@@ -404,7 +445,7 @@ applyBodyTag="false"
   }
 
   #newbut {
-    position: absolute;
+    position: fixed;
     color: #fff;
     text-align: center;
     text-decoration: none;
@@ -415,45 +456,107 @@ applyBodyTag="false"
     background: #FF9D00;
   }
 
+  .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 55px;
+    height: 55px;
+  }
+
+  .arrow-back {
+    float: left;
+    margin-top: 20px;
+    margin-left: 25px;
+    width: 10px; 
+    height: 10px;
+    -webkit-transform: rotate(-135deg);
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
+  }
+
   .arrow-right {
     float: right;
     margin-top: -25px;
-    width: 10px;
+    width: 10px; 
     height: 10px;
     -webkit-transform: rotate(45deg);
     border-top: 3px solid #cccccc;
     border-right: 3px solid #cccccc;
   }
 
-.animate-enter, 
-.animate-leave
-{ 
-    -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    -o-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+  .x {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    padding: 17px;
+  }
+
+  .x:hover {
+    cursor: pointer;
+  }
+
+  #collab {
+    position: fixed;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    top: 100%;
+    overflow: scroll;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #add-collab-input {
+    font-family: ProximaNova, sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: #4d4d4d;
+    width: 75%;
+    margin-top: 6px;
+    padding: 4px;
+    padding-left: 10px;
+    outline: none;
+    border: 1px solid #999999;
+    max-width: 800px;
+    background: transparent;
+    border-radius: 5px;
+    -webkit-appearance: none;
+  }
+
+  .animate-leave {
     position: relative;
     display: block;
-    overflow: hidden;
-    text-overflow: clip;
-    white-space:nowrap;
-} 
+  } 
+
+  .animate-enter, .animater-enter.animate-enter-active {
+    animation: none;
+    -webkit-animation: none;
+  }
  
-.animate-leave.animate-leave-active,
-.animate-enter {
-    opacity: 0;
-    width: 0px;
-    height: 0px;
-}
- 
-.animate-enter.animate-enter-active, 
-.animate-leave {
-    opacity: 1;
-    width: 150px;
-    height: 30px;
-}
-    
+  .animate-leave.animate-leave-active {
+    animation: leave 0.25s;
+    -webkit-animation: leave 0.25s;
+    animation-fill-mode: both;
+  }
+
+  @keyframes leave
+  {
+    0% {right: 0%; height: 80px;}
+    50% {right: -100%; height: 80px;}
+    99% {right: -100%; height: 0px;}
+    100% {right: -100%; height: 0px; display: none;}
+  }
+
+  @-webkit-keyframes leave /* Safari and Chrome */
+  {
+    0% {right: 0%; height: 80px;}
+    50% {right: -100%; height: 80px;}
+    99% {right: -100%; height: 0px;}
+    100% {right: -100%; height: 0px; display: none;}
+  }
 
   html { height: 100%; margin: 0; padding: 0;}
 
@@ -498,7 +601,7 @@ applyBodyTag="false"
         <a class="link" data-section="one" ng-click="getTasks(project.Id); projectTransition(project);" ng-repeat="project in projects">
           <img class="image" src="{{idToUrlMap[project.CreatedById]}}"></img>
           <p class="link-title"> {{project.Name}} </p>
-          <p class="link-blurb"> {{project.Description__c}} &nbsp;</p>
+          <p class="link-blurb"> {{project.Description__c}} &nbsp; </p>
           <div class="arrow-right"></div>
         </a>
         <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
@@ -513,7 +616,7 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Detail__c}} </p>
+            <p class="link-blurb"> {{task.Detail__c}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
         </div>
@@ -525,7 +628,7 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Detail__c}} </p>
+            <p class="link-blurb"> {{task.Detail__c}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
         </div>
@@ -537,7 +640,7 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
             <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb"> {{task.Detail__c}} </p>
+            <p class="link-blurb"> {{task.Detail__c}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
