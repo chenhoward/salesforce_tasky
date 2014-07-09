@@ -585,7 +585,7 @@ applyBodyTag="false"
     </div>
     <div id="project-title"> {{currentProject.Name}} </div>
     <div id="footer">
-      <a data-section="one-overall" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}"></img></a>
+      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}" ng-click="sOneNav(currentProject.Id)"></img>
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
       <a data-section="four" href="#"><img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img></a>
       <div>
