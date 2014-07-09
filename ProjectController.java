@@ -33,7 +33,7 @@ global class ProjectController{
     /** Update the STATUS of a Task with Id TASKID and returns all the tasks. */
     @RemoteAction
     global static Tasky_Task__c[] updateTaskStatus(Id taskID, String status, Id projectId) {
-        Tasky_Task__c[] tasks = getTaks(projectId);
+        Tasky_Task__c[] tasks = getTasks(projectId);
         Tasky_Task__c task;
         for (Integer i = 0; i < tasks.size(); i++) {
             if (tasks[i].Id == taskId) {
@@ -83,7 +83,6 @@ global class ProjectController{
     @RemoteAction
     global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
         Tasky_Collaborator__c[] collaborators = [SELECT Id, Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
-        collaborators.add(0, new Tasky_Collaborator__c(Id = null));
         return collaborators;
     }
 
