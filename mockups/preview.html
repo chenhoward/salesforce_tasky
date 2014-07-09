@@ -412,18 +412,22 @@ id="todo"
     cursor: pointer;
   }
 
-  #add-collab-button {
+  .add-collab-button, .remove-collab-button {
     float: right;
-    margin-top: 3px;
-    height: 18px;
-    width: 18px;
-    padding: 8px;
-    border-radius: 17px;
-    -webkit-transform: rotate(45deg);
+    height: 20px;
+    width: 20px;
+    padding: 10px;
+    border-radius: 20px;
+    margin-top: -37px;
     background: #ff9d00;
   }
 
-  #add-collab-button:hover {
+  .add-collab-button {
+    -webkit-transform: rotate(45deg);
+    background: #999;
+  }
+
+  .add-collab-button:hover, .remove-collab-button:hover {
     cursor: pointer;
   }
 
@@ -511,9 +515,9 @@ id="todo"
     -webkit-overflow-scrolling: touch;
   }
 
-  html { height: 100%; margin: 0; padding: 0;}
-
-  body { height: 100%; margin: 0; padding: 0 }
+  .transparent {
+    opacity: 0.5;
+  }
 
   #add-collab-input {
     font-family: ProximaNova, sans-serif;
@@ -531,6 +535,10 @@ id="todo"
     border-radius: 5px;
     -webkit-appearance: none;
   }
+
+  html { height: 100%; margin: 0; padding: 0;}
+
+  body { height: 100%; margin: 0; padding: 0 }
   </style>
 </head>
 <body>
@@ -650,18 +658,37 @@ id="todo"
         <img class="x" id="hide-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         <div class="normal-title"> Collaborators </div>
         <div class="link">
-          <input type="text" id="add-collab-input" placeholder="Add a collaborator..."/>
-          <img id="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+          <input type="text" id="add-collab-input" placeholder="Search for a person..."/>
         </div>
         <div class="link">
           <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
           <p class="link-title"> Kevin Wu </p>
           <p class="link-blurb"> Front-End Web Design Intern </p>
+          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         </div>
         <div class="link">
           <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
           <p class="link-title"> Howard Chen </p>
           <p class="link-blurb"> Front-End Web Design Intern </p>
+          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          <p class="link-title"> Haward Chen </p>
+          <p class="link-blurb"> Someone That Does Stuff </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          <p class="link-title"> Huward Chen </p>
+          <p class="link-blurb"> Interning Intern </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          <p class="link-title"> Heward Chen </p>
+          <p class="link-blurb"> Potato Eater </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         </div>
       </div>
     </div>
