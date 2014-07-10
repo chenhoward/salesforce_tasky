@@ -54,14 +54,21 @@ global class ProjectController{
 
     /** Adds a collaborator with Id USERID to a project with Id PROJECTID. */
     @RemoteAction
-    global static Tasky_Collaborator__c addCollaborator(Id projectId, Id userId) {
+    global static List<SObject[]> addCollaborator(Id projectId, Id userId) {
         Tasky_Collaborator__c collaborator = new Tasky_Collaborator__c();
         User[] users= [SELECT Name FROM User WHERE Id =: userId];
         collaborator.Name = users[0].Name;
         collaborator.User__c = userId;
         collaborator.Project__c = projectId;
         insert collaborator;
-        return collaborator;
+        return finalList(projectId);
+    }
+
+    private static List<SObject[]> finalList(Id projId) {
+        List<SObject[]> finalList = new List<List<SObject>>();
+        finalList.add(getOrgUsers(projId));
+        finalList.add(getProjectCollaborators(projId));
+        return finalList;
     }
 
     /** Returns all the users in the org. */
@@ -90,10 +97,11 @@ global class ProjectController{
 
     /** Removes Collaborator with Id COLLABORATOR from the project. */
     @RemoteAction
-    global static Tasky_Collaborator__c removeCollaborator(Id collaboratorId) {
-        Tasky_Collaborator__c[] collaborators = [SELECT Id FROM Tasky_Collaborator__c WHERE Id =: collaboratorId];
+    global static List<SObject[]> removeCollaborator(Id collaboratorId) {
+        Tasky_Collaborator__c[] collaborators = [SELECT Id, Project__c FROM Tasky_Collaborator__c WHERE Id =: collaboratorId];
+        Id projId = collaborators[0].Project__c;
         delete collaborators[0];
-        return collaborators[0];
+        return finalList(projId);
     }
 
     /** Returns all the Collaborators working on project with Id PROJECTID. */

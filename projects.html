@@ -916,8 +916,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         userId,
         function(result, event) {
           if (event.status) {
-            getProjectCollaborators(projectId);
-            $scope.getOrgUsers(projectId);
+            $scope.users = result[0];
+            $scope.projectCollaborators = result[1];
+            $scope.$apply();
           } else if (event.type === 'exception') {
             console.log('exception');
           } else {
@@ -934,8 +935,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         collaboratorId,
         function(result, event) {
           if (event.status) {
-            getProjectCollaborators($scope.currentProject.Id);
-            $scope.getOrgUsers($scope.currentProject.Id);
+            $scope.users = result[0];
+            $scope.projectCollaborators = result[1];
+            $scope.$apply();
           } else if (event.type === 'exception') {
             console.log('exception');
           } else {
