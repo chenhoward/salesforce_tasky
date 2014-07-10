@@ -675,31 +675,13 @@ applyBodyTag="false"
           <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
           <p class="link-title"> {{collaborator.Name}} </p>
           <p class="link-blurb"> &nbsp; </p>
-          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="removeCollaborator(collaboratod.Id)"></img>
         </div>
-        <div class="link">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title"> Howard Chen </p>
-          <p class="link-blurb"> Front-End Web Design Intern </p>
-          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
-        </div>
-        <div class="link transparent">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
-          <p class="link-title"> Haward Chen </p>
-          <p class="link-blurb"> Someone That Does Stuff </p>
-          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
-        </div>
-        <div class="link transparent">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
-          <p class="link-title"> Huward Chen </p>
-          <p class="link-blurb"> Interning Intern </p>
-          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
-        </div>
-        <div class="link transparent">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
-          <p class="link-title"> Heward Chen </p>
-          <p class="link-blurb"> Potato Eater </p>
-          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        <div class="link transparent" ng-repeat="user in users">
+          <img class="image" src="{{idToUrlMap[user.Id]}}"></img>
+          <p class="link-title"> {{user.Name}} </p>
+          <p class="link-blurb">  &nbsp;  </p>
+          <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="addCollaborator(currentProject.Id, user.Id)"></img>
         </div>
       </div>
     </div>
@@ -843,6 +825,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.projectTransition = function(project) {
     console.log('it is');
     $scope.currentProject = project;
+    $scope.getOrgUsers(project.Id);
     setSection($('#one'), $('#one-overall'));
     getProjectCollaborators(project.Id);
   }
@@ -899,13 +882,18 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
 
 
-  /** Returns all users in the org. */
-  $scope.getOrgUsers = function() {
+  /** Returns all users in the org that are in project with Id PROJID. */
+  $scope.getOrgUsers = function(projId) {
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.getOrgUsers}',
+      projId,
       function(result, event) {
         if (event.status) {
           $scope.users = result;
+          for(var i = 0; i < result.length; i++) {
+            $scope.userIds[result[i].Id] = true;
+          }
+          console.log(result);
           $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
@@ -951,8 +939,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         );
     }
 
-    $scope.getOrgUsers();
-
     $scope.convertTime = function(time) {
       var date = new Date(time);
       return date.toString();
@@ -990,6 +976,20 @@ checklistApp.filter('listType', function() {
     }
     return finalList;
 
+  }
+});
+checklistApp.filter('allFilter', function() {
+  return function(input, scope, user) {
+    finalList = [];
+    if (scope.all) {
+      return input
+    }
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].Assignee__c == scope.projectCollaboratorMap[scope.currentProject.Id].Id) {
+        finalList.push(input[i]);
+      }
+    }
+    return finalList;
   }
 });
 checklistApp.filter('allFilter', function() {

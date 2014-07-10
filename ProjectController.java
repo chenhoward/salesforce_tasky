@@ -66,9 +66,26 @@ global class ProjectController{
 
     /** Returns all the users in the org. */
     @RemoteAction
-    global static User[] getOrgUsers() {
+    global static User[] getOrgUsers(Id projId) {
+        Tasky_Collaborator__c[] collaborators = getProjectCollaborators(projId);
         User[] users = [SELECT Name, Id FROM User];
-        return users;
+        User[] finalList = new List<User>();
+        for (Integer i = 0; i < users.size(); i++) {
+            if (!isUserACollaborator(users[i], collaborators)) {
+                finalList.add(users[i]);
+            }
+        }
+        return finalList;
+    }
+
+    /** Returns true if the COLLABORATORS contain the CHECKEDUSER. */
+    private static Boolean isUserACollaborator(User checkedUser, Tasky_Collaborator__c[] collaborators) {
+        for (Integer i = 0; i < collaborators.size(); i++) {
+            if (checkedUser.Id == collaborators[i].User__c) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Removes Collaborator with Id COLLABORATOR from the project. */
