@@ -82,7 +82,7 @@ global class ProjectController{
     /** Returns all the Collaborators working on project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
-        Tasky_Collaborator__c[] collaborators = [SELECT Id, Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        Tasky_Collaborator__c[] collaborators = [SELECT Id, Name, User__c FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
         return collaborators;
     }
 

@@ -419,18 +419,22 @@ applyBodyTag="false"
     cursor: pointer;
   }
 
-  #add-collab-button {
+   .add-collab-button, .remove-collab-button {
     float: right;
-    margin-top: 3px;
-    height: 18px;
-    width: 18px;
-    padding: 8px;
-    border-radius: 17px;
-    -webkit-transform: rotate(45deg);
+    height: 20px;
+    width: 20px;
+    padding: 10px;
+    border-radius: 20px;
+    margin-top: -37px;
     background: #ff9d00;
   }
 
-  #add-collab-button:hover {
+  .add-collab-button {
+    -webkit-transform: rotate(45deg);
+    background: #999;
+  }
+
+  .add-collab-button:hover, .remove-collab-button:hover {
     cursor: pointer;
   }
 
@@ -661,16 +665,16 @@ applyBodyTag="false"
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
       </section>
-     <div id="collab">
+         <div id="collab">
         <img class="x" id="hide-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         <div class="normal-title"> Collaborators </div>
         <div class="link">
           <input type="text" id="add-collab-input" placeholder="Search for a person..."/>
         </div>
-        <div class="link">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-          <p class="link-title"> Kevin Wu </p>
-          <p class="link-blurb"> Front-End Web Design Intern </p>
+        <div class="link" ng-repeat="collaborator in projectCollaborators">
+          <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
+          <p class="link-title"> {{collaborator.Name}} </p>
+          <p class="link-blurb"> &nbsp; </p>
           <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         </div>
         <div class="link">
@@ -780,6 +784,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           for(var i = 0; i < result.length; i++) {
             $scope.idToUrlMap[keys[i]] = result[i];
           }
+          console.log($scope.idToUrlMap);
           $scope.$apply();
 
         } else if (event.type === 'exception') {
