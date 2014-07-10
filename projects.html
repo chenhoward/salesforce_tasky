@@ -624,7 +624,7 @@ applyBodyTag="false"
       </section>
       <section id="one">
         <div class="spacer"></div>
-        <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this" ng-animate="'animate'">
+        <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
@@ -637,7 +637,7 @@ applyBodyTag="false"
       </section>
       <section id="two">
         <div class="spacer"></div>
-        <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this" ng-animate="'animate'">
+        <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
@@ -650,7 +650,7 @@ applyBodyTag="false"
       </section>
       <section id="three">
         <div class="spacer"></div>
-        <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this" ng-animate="'animate'">
+        <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
