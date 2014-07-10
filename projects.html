@@ -825,7 +825,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.projectTransition = function(project) {
     console.log('it is');
     $scope.currentProject = project;
-    $scope.getOrgUsers(project.Id);
     setSection($('#one'), $('#one-overall'));
     getProjectCollaborators(project.Id);
   }
@@ -844,7 +843,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             }
           }
           console.log('here');
-          getUserImages();
+          $scope.getOrgUsers(projectId);
           $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
@@ -890,10 +889,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       function(result, event) {
         if (event.status) {
           $scope.users = result;
-          for(var i = 0; i < result.length; i++) {
+         for(var i = 0; i < result.length; i++) {
             $scope.userIds[result[i].Id] = true;
           }
           console.log(result);
+          getUserImages();
           $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
