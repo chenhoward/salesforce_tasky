@@ -669,15 +669,15 @@ applyBodyTag="false"
         <img class="x" id="hide-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         <div class="normal-title"> Collaborators </div>
         <div class="link">
-          <input type="text" id="add-collab-input" placeholder="Search for a person..."/>
+          <input type="text" id="add-collab-input" ng-model="searchText" placeholder="Search for a person..."/>
         </div>
-        <div class="link" ng-repeat="collaborator in projectCollaborators">
+        <div class="link" ng-repeat="collaborator in projectCollaborators | filter:searchText">
           <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
           <p class="link-title"> {{collaborator.Name}} </p>
           <p class="link-blurb"> &nbsp; </p>
           <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="removeCollaborator(collaborator.Id)"></img>
         </div>
-        <div class="link transparent" ng-repeat="user in users">
+        <div class="link transparent" ng-repeat="user in users | filter:searchText">
           <img class="image" src="{{idToUrlMap[user.Id]}}"></img>
           <p class="link-title"> {{user.Name}} </p>
           <p class="link-blurb">  &nbsp;  </p>
