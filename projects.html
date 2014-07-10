@@ -675,7 +675,7 @@ applyBodyTag="false"
           <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
           <p class="link-title"> {{collaborator.Name}} </p>
           <p class="link-blurb"> &nbsp; </p>
-          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="removeCollaborator(collaboratod.Id)"></img>
+          <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="removeCollaborator(collaborator.Id)"></img>
         </div>
         <div class="link transparent" ng-repeat="user in users">
           <img class="image" src="{{idToUrlMap[user.Id]}}"></img>
@@ -793,7 +793,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
             var tempId =  $scope.projectCollaborators[i].Id;
             $scope.projectCollaboratorsIds[i] = tempId;
             $scope.idToNameMap[tempId] = $scope.projectCollaborators[i].Name;
+            $scope.userIds[result[i].User__c] = true;
           }
+          getUserImages();
           $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
@@ -914,7 +916,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         userId,
         function(result, event) {
           if (event.status) {
-          } else if (event,type === 'exception') {
+            getProjectCollaborators(projectId);
+            $scope.getOrgUsers(projectId);
+          } else if (event.type === 'exception') {
             console.log('exception');
           } else {
             console.log('error');
@@ -930,7 +934,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         collaboratorId,
         function(result, event) {
           if (event.status) {
-          } else if (event,type === 'exception') {
+            getProjectCollaborators($scope.currentProject.Id);
+            $scope.getOrgUsers($scope.currentProject.Id);
+          } else if (event.type === 'exception') {
             console.log('exception');
           } else {
             console.log('error');
