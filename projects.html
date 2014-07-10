@@ -25,12 +25,7 @@ applyBodyTag="false"
   <script type="text/javascript">
   function setSection(to, from)
   {
-    if (to.is("#one-overall")) {
-        $("#newbut").animate({"left":"100%"}, 0);
-        $("#newbut").animate({"left":"0"},100,'linear');
-      } else {
-        $("#newbut").animate({"left":"-100%"},100,'linear');
-      }
+    $('#collab').animate({"top":"100%"},100,'linear');
     if (!(to.hasClass("active")))
     {
       from.animate({"left":"-100%"},100,'linear')
@@ -40,6 +35,12 @@ applyBodyTag="false"
         from.removeClass("active");
         to.addClass("active");
       });
+      if (to.is("#one-overall")) {
+        $("#newbut").animate({"left":"100%"}, 0);
+        $("#newbut").animate({"left":"0"},100,'linear');
+      } else {
+        $("#newbut").animate({"left":"-100%"},100,'linear');
+      }
       if (to.is("#one")) {
         $("#pending-tab").addClass("active-tab");
         $("#pending-alt").css("display", "inline");
@@ -84,6 +85,14 @@ applyBodyTag="false"
     {
       $(this).css("opacity", "1");
       $(this).parent().animate({right:"-100%"}, 200).animate({height:"0px", padding:"0px", border: "0px"}, 200);
+    });
+    $('#collab-button').on('click', function(event)
+    {
+      $('#collab').animate({"top":"0%"},100,'linear');
+    });
+    $('#hide-collab').on('click', function(event)
+    {
+      $('#collab').animate({"top":"100%"},100,'linear');
     });
   });
   window.addEventListener('load', function() {
