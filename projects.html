@@ -19,9 +19,6 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'cometd.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'json2.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'jquery.cometd.js')}"/>
-
-
-
   <script type="text/javascript">
   function setSection(to, from)
   {
@@ -38,8 +35,11 @@ applyBodyTag="false"
       if (to.is("#one-overall")) {
         $("#newbut").animate({"left":"100%"}, 0);
         $("#newbut").animate({"left":"0"},100,'linear');
+        $("#header").animate({"left":"100%"}, 0);
+        $("#header").animate({"left":"0"},100,'linear');
       } else {
         $("#newbut").animate({"left":"-100%"},100,'linear');
+        $("#header").animate({"left":"-100%"},100,'linear');
       }
       if (to.is("#one")) {
         $("#pending-tab").addClass("active-tab");
@@ -159,6 +159,10 @@ applyBodyTag="false"
   }
 
   #header {
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    left: 0;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     height: 100px;
@@ -170,6 +174,13 @@ applyBodyTag="false"
     font-weight: 700;
     color: #ff9d00;
     text-align: center;
+  }
+
+  .small-spacer {
+    height: 100px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
   }
 
   .spacer {
@@ -459,13 +470,14 @@ applyBodyTag="false"
 
   #newbut {
     position: fixed;
+    z-index: 4;
     color: #fff;
     text-align: center;
     text-decoration: none;
     width: 100%;
     height: 80px;
     bottom: 0;
-    left: 0px;
+    left: 0;
     background: #FF9D00;
   }
 
@@ -527,7 +539,7 @@ applyBodyTag="false"
     font-weight: 300;
     font-size: 18px;
     color: #4d4d4d;
-    width: 75%;
+    width: 92%;
     margin-top: 6px;
     padding: 4px;
     padding-left: 10px;
@@ -541,6 +553,36 @@ applyBodyTag="false"
 
   .late {
     color: red;
+  }
+
+  .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 55px;
+    height: 55px;
+  }
+
+  .arrow-back {
+    float: left;
+    margin-top: 20px;
+    margin-left: 25px;
+    width: 10px; 
+    height: 10px;
+    -webkit-transform: rotate(-135deg);
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
+  }
+
+  .shorten {
+    width: 61%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .transparent {
+    opacity: 0.5;
   }
 
   .animate-leave {
@@ -600,7 +642,11 @@ applyBodyTag="false"
         <p id="complete-tag"> Complete </p>
       </a>
     </div>
-    <div id="project-title"> {{currentProject.Name}} </div>
+    <div id="project-title"> {{currentProject.Name}} 
+      <a class="back" data-section="one-overall" href="#">
+        <div class="arrow-back"></div>
+      </a>
+    </div>
     <div id="footer">
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}" ng-click="sOneNav(currentProject.Id)"></img>
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
@@ -614,30 +660,33 @@ applyBodyTag="false"
     </div>
     <div id="container">
       <section id="one-overall" class="active overall">
-        <div id="header">Taskly</div>
+        <div class="small-spacer"></div>
         <a class="link" data-section="one" ng-click="getTasks(project.Id); projectTransition(project);" ng-repeat="project in projects">
           <img class="image" src="{{idToUrlMap[project.CreatedById]}}"></img>
-          <p class="link-title"> {{project.Name}} </p>
-          <p class="link-blurb"> {{project.Description__c}} &nbsp; </p>
+          <p class="link-title shorten"> {{project.Name}} </p>
+          <p class="link-blurb shorten"> {{project.Description__c}} &nbsp; </p>
           <div class="arrow-right"></div>
         </a>
-        <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
-          <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img></p>
-          <p id="newtag"> New </p>
-        </div>
+        <div class="spacer"></div>
       </section>
+      <div id="header">Tasky</div>
+      <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
+        <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img></p>
+        <p id="newtag"> New </p>
+      </div>
       <section id="one">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
           <div ng-click="sOneNav(task.Id)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
-            <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
-            <p class="link-blurb late" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-title shorten"> {{task.Name}} </p>
+            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
         </div>
+        <div class="spacer"></div>
       </section>
       <section id="two">
         <div class="spacer"></div>
@@ -645,12 +694,13 @@ applyBodyTag="false"
           <div ng-click="sOneNav(task.Id)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
-            <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
-            <p class="link-blurb late" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-title shorten"> {{task.Name}} </p>
+            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
+            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
         </div>
+        <div class="spacer"></div>
       </section>
       <section id="three">
         <div class="spacer"></div>
@@ -658,12 +708,13 @@ applyBodyTag="false"
           <div ng-click="sOneNav(task.Id)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
-            <p class="link-title"> {{task.Name}} </p>
-            <p class="link-blurb" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
-            <p class="link-blurb late" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-title shorten"> {{task.Name}} </p>
+            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
+            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
+        <div class="spacer"></div>
       </section>
          <div id="collab">
         <img class="x" id="hide-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
@@ -673,13 +724,13 @@ applyBodyTag="false"
         </div>
         <div class="link" ng-repeat="collaborator in projectCollaborators | filter:searchText">
           <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
-          <p class="link-title"> {{collaborator.Name}} </p>
+          <p class="link-title shorten"> {{collaborator.Name}} </p>
           <p class="link-blurb"> &nbsp; </p>
           <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="removeCollaborator(collaborator.Id)"></img>
         </div>
         <div class="link transparent" ng-repeat="user in users | filter:searchText">
           <img class="image" src="{{idToUrlMap[user.Id]}}"></img>
-          <p class="link-title"> {{user.Name}} </p>
+          <p class="link-title shorten"> {{user.Name}} </p>
           <p class="link-blurb">  &nbsp;  </p>
           <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="addCollaborator(currentProject.Id, user.Id)"></img>
         </div>
