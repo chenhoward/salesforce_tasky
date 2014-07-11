@@ -20,8 +20,7 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'json2.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.StreamAssets, 'jquery.cometd.js')}"/>
   <script type="text/javascript">
-  function setSection(to, from)
-  {
+  function setSection(to, from) {
     $('#collab').animate({"top":"100%"},100,'linear');
     if (!(to.hasClass("active")))
     {
@@ -73,6 +72,12 @@ applyBodyTag="false"
       }
     }
   }
+  function switchCollab() {
+    $('#switch-collab').animate({"top":"0%"}, { queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"left":"0%"},{ queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"bottom":"0%"},{ queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"right":"0%"},{ queue: false, duration: 200 }, 'linear');
+  }
   $(document).ready(function(){
     $('a').on('click', function(event)
     {
@@ -81,18 +86,17 @@ applyBodyTag="false"
       $fromSlide= $('.active');
       setSection($toSlide, $fromSlide);
     });
-    $('.link-button').on('click', function(event)
-    {
-      $(this).css("opacity", "1");
-      $(this).parent().animate({right:"-100%"}, 200).animate({height:"0px", padding:"0px", border: "0px"}, 200);
-    });
-    $('#collab-button').on('click', function(event)
-    {
+    $('#collab-button').on('click', function(event) {
       $('#collab').animate({"top":"0%"},100,'linear');
     });
-    $('#hide-collab').on('click', function(event)
-    {
+    $('#hide-collab').on('click', function(event) {
       $('#collab').animate({"top":"100%"},100,'linear');
+    });
+    $('#hide-switch-collab').on('click', function(event) {
+      $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 200 }, 'linear');
+      $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 200 }, 'linear');
+      $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 200 }, 'linear');
+      $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 200 }, 'linear');
     });
   });
   window.addEventListener('load', function() {
@@ -430,7 +434,7 @@ applyBodyTag="false"
     cursor: pointer;
   }
 
-   .add-collab-button, .remove-collab-button {
+   .add-collab-button, .remove-collab-button, .assignee-button {
     float: right;
     height: 20px;
     width: 20px;
@@ -445,7 +449,11 @@ applyBodyTag="false"
     background: #999;
   }
 
-  .add-collab-button:hover, .remove-collab-button:hover {
+  .not-assignee {
+    background: #999;
+  }
+
+  .add-collab-button:hover, .remove-collab-button:hover, .assignee-button:hover {
     cursor: pointer;
   }
 
@@ -534,6 +542,18 @@ applyBodyTag="false"
     -webkit-overflow-scrolling: touch;
   }
 
+  #switch-collab {
+    position: fixed;
+    z-index: 4;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    overflow: scroll;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+  }
+
   #add-collab-input {
     font-family: ProximaNova, sans-serif;
     font-weight: 300;
@@ -585,6 +605,7 @@ applyBodyTag="false"
     opacity: 0.5;
   }
 
+  /*
   .animate-leave {
     position: relative;
     display: block;
@@ -609,13 +630,13 @@ applyBodyTag="false"
     100% {right: -100%; height: 0px; display: none;}
   }
 
-  @-webkit-keyframes leave /* Safari and Chrome */
+  @-webkit-keyframes leave
   {
     0% {right: 0%; height: 80px;}
     50% {right: -100%; height: 80px;}
     99% {right: -100%; height: 0px;}
     100% {right: -100%; height: 0px; display: none;}
-  }
+  } */
 
   html { height: 100%; margin: 0; padding: 0;}
 
@@ -677,9 +698,11 @@ applyBodyTag="false"
       <section id="one">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
-          <div ng-click="sOneNav(task.Id)">
+          <div ng-click="updateAssignee()">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          </div>
+          <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
@@ -691,9 +714,11 @@ applyBodyTag="false"
       <section id="two">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this">
-          <div ng-click="sOneNav(task.Id)">
+          <div ng-click="updateAssignee()">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          </div>
+          <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
@@ -705,9 +730,11 @@ applyBodyTag="false"
       <section id="three">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
-          <div ng-click="sOneNav(task.Id)">
+          <div ng-click="updateAssignee()">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+          </div>
+          <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
@@ -716,7 +743,7 @@ applyBodyTag="false"
         </div>
         <div class="spacer"></div>
       </section>
-         <div id="collab">
+      <div id="collab">
         <img class="x" id="hide-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
         <div class="normal-title"> Collaborators </div>
         <div class="link">
@@ -735,16 +762,41 @@ applyBodyTag="false"
           <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="addCollaborator(currentProject.Id, user.Id)"></img>
         </div>
       </div>
+      <div id="switch-collab">
+        <img class="x" id="hide-switch-collab" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}"></img>
+        <div class="normal-title"> Assignee </div>
+        <div class="link">
+          <input type="text" id="add-collab-input" ng-model="searchText" placeholder="Search for a person..."/>
+        </div>
+        <div class="link">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
+          <p class="link-title"> Kevin Wu </p>
+          <p class="link-blurb"> kevinwu@gmail.com </p>
+          <img class="assignee-button" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
+          <p class="link-title"> Howard Chen </p>
+          <p class="link-blurb"> howardhoward@howard.com </p>
+          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
+          <p class="link-title"> Haward Chen </p>
+          <p class="link-blurb"> hawardhoward@howard.com </p>
+          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
+        </div>
+        <div class="link transparent">
+          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
+          <p class="link-title"> Huward Chen </p>
+          <p class="link-blurb"> huwardhoward@howard.com </p>
+          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
+        </div>
+      </div>
     </div>
   </div>
 </body>
 </html>
-
-
-
-
-
-
 <script>
 /** Angular Script */
 var checklistApp = angular.module('taskyApp', []);
@@ -905,6 +957,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         }
       }
       );
+  }
+
+  $scope.updateAssignee = function() {
+      switchCollab();
   }
 
   /** Updates the STATUS of Task with Id TASKID. */
