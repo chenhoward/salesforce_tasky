@@ -752,13 +752,13 @@ applyBodyTag="false"
         <div class="link" ng-repeat="collaborator in projectCollaborators | filter:searchText">
           <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
           <p class="link-title shorten"> {{collaborator.Name}} </p>
-          <p class="link-blurb"> &nbsp; </p>
+          <p class="link-blurb shorten"> &nbsp; </p>
           <img class="remove-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="removeCollaborator(collaborator.Id)"></img>
         </div>
         <div class="link transparent" ng-repeat="user in users | filter:searchText">
           <img class="image" src="{{idToUrlMap[user.Id]}}"></img>
           <p class="link-title shorten"> {{user.Name}} </p>
-          <p class="link-blurb">  &nbsp;  </p>
+          <p class="link-blurb shorten">  &nbsp;  </p>
           <img class="add-collab-button" src="{!URLFOR($Resource.ChecklistAssets, 'x.svg')}" ng-click="addCollaborator(currentProject.Id, user.Id)"></img>
         </div>
       </div>
@@ -770,26 +770,26 @@ applyBodyTag="false"
         </div>
         <div class="link">
           <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-          <p class="link-title"> Kevin Wu </p>
-          <p class="link-blurb"> kevinwu@gmail.com </p>
+          <p class="link-title shorten"> Kevin Wu </p>
+          <p class="link-blurb shorten"> kevinwu@gmail.com </p>
           <img class="assignee-button" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
         </div>
         <div class="link transparent">
           <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title"> Howard Chen </p>
-          <p class="link-blurb"> howardhoward@howard.com </p>
+          <p class="link-title shorten"> Howard Chen </p>
+          <p class="link-blurb shorten"> howardhoward@howard.com </p>
           <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
         </div>
         <div class="link transparent">
           <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title"> Haward Chen </p>
-          <p class="link-blurb"> hawardhoward@howard.com </p>
+          <p class="link-title shorten"> Haward Chen </p>
+          <p class="link-blurb shorten"> hawardhoward@howard.com </p>
           <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
         </div>
         <div class="link transparent">
           <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title"> Huward Chen </p>
-          <p class="link-blurb"> huwardhoward@howard.com </p>
+          <p class="link-title shorten"> Huward Chen </p>
+          <p class="link-blurb shorten"> huwardhoward@howard.com </p>
           <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
         </div>
       </div>
