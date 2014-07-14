@@ -803,10 +803,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.users = [];
   /** List of all collaborators in a project. */
   $scope.projectCollaborators = [];
-  /** List of all collaborators Id's in a project. */
-  $scope.projectCollaboratorsIds = [];
-  /** Map of Ids to name. */
-  $scope.idToNameMap= {};
   /** Map of Ids to Url. */
   $scope.idToUrlMap= {};
   /** Set of User Ids. */
@@ -840,15 +836,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     }
   }
 
-  /** Takes COLLABORATORS and gets project information from them. */
-  var createProjectsFromCollaborators = function(collaborators) {
-    for (var i = 0; i < collaborators.length; i++) {
-      $scope.projectCollaboratorMap[collaborators[i].Project__r.Id] = collaborators[i];
-      $scope.projects[i] = collaborators[i].Project__r;
-      $scope.userIds[collaborators[i].Project__r.CreatedById] = true;
-    }
-  }
-
   var getUserImages = function() {
     var keys = Object.keys($scope.userIds);
     Visualforce.remoting.Manager.invokeAction(
@@ -861,7 +848,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           }
           console.log($scope.idToUrlMap);
           $scope.$apply();
-
         } else if (event.type === 'exception') {
           console.log('exception');
         } else {
@@ -883,13 +869,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           console.log(result);
           $scope.projectCollaborators = result;
           for (var i = 0; i < result.length; i++) {
-            var tempId =  $scope.projectCollaborators[i].Id;
-            $scope.projectCollaboratorsIds[i] = tempId;
-            $scope.idToNameMap[tempId] = $scope.projectCollaborators[i].Name;
             $scope.userIds[result[i].User__c] = true;
           }
           getUserImages();
-          $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
         } else {
@@ -899,15 +881,17 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       );
   }
 
-  /** Gets all Collaborators that look up to current user. */
-  var getUserCollaborators = function() {
+  /** Gets all currentProjects. */
+  var getProjects = function() {
     Visualforce.remoting.Manager.invokeAction(
-      '{!$RemoteAction.ProjectController.getUserCollaborators}',
+      '{!$RemoteAction.ProjectController.getProjects}',
       function(result, event) {
         if (event.status) {
-          createProjectsFromCollaborators(result);
+          $scope.projects = result;
+          for (var i = 0; i < result.length; i++) {
+            $scope.userIds[result[i].CreatedById] = true;
+          }
           getUserImages();
-          $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
         } else {
@@ -917,12 +901,14 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       );
   }
 
+  /** Transition to a PROJECT. */
   $scope.projectTransition = function(project) {
     console.log('it is');
     $scope.currentProject = project;
     setSection($('#one'), $('#one-overall'));
     getProjectCollaborators(project.Id);
   }
+
   /** Gets all the Tasks in project with Id PROJECTID. */
   $scope.getTasks = function(projectId, transition) {
     Visualforce.remoting.Manager.invokeAction(
@@ -949,6 +935,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       );
   }
 
+  /** Select a collaborator for a TASK. */
   $scope.updateAssigneeNav = function(task) {
     $scope.currentTask = task;
     switchCollab();
@@ -966,6 +953,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         return copy;
     }
 
+  /** Assigns TASK to COLLABORATOR. */
   $scope.assignTask = function(task, collaborator) {
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.assignTask}',
@@ -1006,10 +994,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       );
   }
 
-  getUserCollaborators();
-
-
-
+    getProjects();
 
   /** Returns all users in the org that are in project with Id PROJID. */
   $scope.getOrgUsers = function(projId) {
@@ -1024,7 +1009,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           }
           console.log(result);
           getUserImages();
-          $scope.$apply();
         } else if (event.type === 'exception') {
           console.log('exception');
         } else {
@@ -1089,7 +1073,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
            // in the callback
 
            $.cometd.subscribe('/topic/ProjectUpdates', function(message) {
-            getUserCollaborators();
+            getProjects();
           });
 
            $.cometd.subscribe('/topic/TaskUpdates', function(message) {
@@ -1121,7 +1105,7 @@ checklistApp.filter('allFilter', function() {
       return input
     }
     for (var i = 0; i < input.length; i++) {
-      if (input[i].Assignee__c == scope.projectCollaboratorMap[scope.currentProject.Id].Id) {
+      if (input[i].Assignee__r && (input[i].Assignee__r.User__c == '{!$User.Id}')) {
         finalList.push(input[i]);
       }
     }

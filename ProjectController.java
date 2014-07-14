@@ -1,11 +1,11 @@
 /** Controller for Tasky Projects Page. */
-global class ProjectController{
+global with Sharing class ProjectController {
 
-    /** Gets all Collaborators associated with the User. */
+    /** Gets all the Projects the user can see. */
     @RemoteAction
-    global static Tasky_Collaborator__c[] getUserCollaborators() {
-        Tasky_Collaborator__c[] collaborators = [SELECT Name, Project__c, Project__r.Name, Project__r.Description__c, Project__r.Id, Project__r.CreatedById FROM Tasky_Collaborator__c WHERE User__c =: UserInfo.getUserId()];
-        return collaborators;
+    global static Tasky_Project__c[] getProjects() {
+        Tasky_Project__c[] projects = [SELECT Name, Id, Due_Date__c, Description__c, CreatedById FROM Tasky_Project__c];
+        return projects;
     }
 
     /** Gets all Tasks associated with the Project with Id PROJECTID. */
@@ -13,21 +13,6 @@ global class ProjectController{
     global static Tasky_Task__c[] getTasks(Id projectId) {
         Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Assignee__r.User__c, Deadline__c FROM Tasky_Task__c WHERE Project__c =: projectId];
         return tasks;
-    }
-
-    /** Create a project named PROJECTNAME with a DESCRIPTION. */
-    @RemoteAction
-    global static Tasky_Project__c createProject(String projectName, String description) {
-        Tasky_Project__c proj = new Tasky_Project__c();
-        proj.Name = projectName;
-        proj.Description__c = description;
-        insert proj;
-        Tasky_Collaborator__c collaborator = new Tasky_Collaborator__c();
-        collaborator.Project__c = proj.Id;
-        collaborator.User__c = UserInfo.getUserId();
-        collaborator.Name = UserInfo.getName();
-        insert collaborator;
-        return proj;
     }
 
     /** Update the STATUS of a Task with Id TASKID and returns all the tasks. */
@@ -41,15 +26,10 @@ global class ProjectController{
             }
         }
         task.Status__c = status;
-        update task;
+        if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
+            update task;
+        }
         return tasks;
-    }
-
-    /** Upserts TASK. */
-    @RemoteAction
-    global static Tasky_Task__c upsertTask(Tasky_Task__c task) {
-        upsert task;
-        return task;
     }
 
     /** Adds a collaborator with Id USERID to a project with Id PROJECTID. */
@@ -60,7 +40,9 @@ global class ProjectController{
         collaborator.Name = users[0].Name;
         collaborator.User__c = userId;
         collaborator.Project__c = projectId;
-        insert collaborator;
+        if (Schema.SObjectType.Tasky_Collaborator__c.isCreateable()) {
+            insert collaborator;
+        }
         return finalList(projectId);
     }
 
@@ -100,7 +82,9 @@ global class ProjectController{
     global static List<SObject[]> removeCollaborator(Id collaboratorId) {
         Tasky_Collaborator__c[] collaborators = [SELECT Id, Project__c FROM Tasky_Collaborator__c WHERE Id =: collaboratorId];
         Id projId = collaborators[0].Project__c;
-        delete collaborators[0];
+        if (Schema.SObjectType.Tasky_Collaborator__c.isDeletable()) {
+            delete collaborators[0];
+        }
         return finalList(projId);
     }
 
@@ -115,18 +99,13 @@ global class ProjectController{
     @RemoteAction
     global static Tasky_Task__c assignTask(Tasky_Task__c task, Id collaboratorId) {
         task.Assignee__c = collaboratorId;
-        update task;
+        if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
+            update task;
+        }
         return task;
     }
 
-    /** Remove the assignee from TASK. */
-    @RemoteAction
-    global static Tasky_Task__c removeTaskCollaborator(Tasky_Task__c task) {
-        task.Assignee__c = null;
-        update task;
-        return task;
-    }
-    
+    /** Gets a list of urls for the chatter photoes of users with id USERIDS. */    
     @RemoteAction
     global static String[] getPhotoes(Id[] userIds) {
         String[] imageUrls = new List<String>();
@@ -135,4 +114,5 @@ global class ProjectController{
         }
         return imageUrls;
     }
+
 }
