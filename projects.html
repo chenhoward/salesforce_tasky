@@ -251,8 +251,9 @@ applyBodyTag="false"
 
   .footer-loader {
     float: left;
-    width: 41px;
-    height: 41px;
+    width: 29px;
+    height: 29px;
+    padding: 6px;
     margin: 7px;
     margin-right: 10px;
     margin-left: 15px;
@@ -480,7 +481,7 @@ applyBodyTag="false"
   }
 
   #new-loader {
-    margin-top: 15px;
+    margin-top: 27px;
     width: 30px;
     height: 30px;
   }
@@ -758,7 +759,7 @@ applyBodyTag="false"
         <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}" ng-show="creatable"></img>
           <img id="new-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/orange-loader.gif')}" ng-show="!creatable"></img>
         </p>
-        <p id="newtag"> New </p>
+        <p id="newtag" ng-show="creatable"> New </p>
       </div>
       <section id="one">
         <div class="spacer"></div>
