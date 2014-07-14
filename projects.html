@@ -256,7 +256,6 @@ applyBodyTag="false"
     margin: 7px;
     margin-right: 10px;
     margin-left: 15px;
-    display: none;
   }
 
   input.switch:empty
@@ -484,7 +483,6 @@ applyBodyTag="false"
     margin-top: 15px;
     width: 30px;
     height: 30px;
-    display: none;
   }
 
   #newtag {
@@ -734,8 +732,8 @@ applyBodyTag="false"
     </div>
     <div id="footer">
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}" ng-click="sOneNav(currentProject.Id)"></img>
-      <img id="footer-preload" class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
-      <img class="footer-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/gray-loader.gif')}"></img>
+      <img id="footer-preload" class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');" ng-show="creatable"></img>
+      <img class="footer-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/gray-loader.gif')}" ng-show="!creatable"></img>
       <img id="collab-button" class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
       <div>
         <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
@@ -757,8 +755,8 @@ applyBodyTag="false"
       </section>
       <div id="header">Tasky</div>
       <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
-        <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img>
-          <img id="new-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/orange-loader.gif')}"></img>
+        <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}" ng-show="creatable"></img>
+          <img id="new-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/orange-loader.gif')}" ng-show="!creatable"></img>
         </p>
         <p id="newtag"> New </p>
       </div>
@@ -883,7 +881,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   /** Whether or not to use stream updates. */
   $scope.streamUpdate = true;
   /** True if we can go to the create view. */
-  var creatable = true;
+  $scope.creatable = true;
 
 
   /** Naviages to the view page of the object with ID. */
@@ -896,8 +894,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   }
 
   $scope.sOneCreate = function(type) {
-    if (creatable) {
-      creatable = false;
+    if ($scope.creatable) {
+      $scope.creatable = false;
       if((typeof sforce != 'undefined') && (sforce != null)) {
         sforce.one.createRecord(type);
       } else if (type == 'Tasky_Project__c'){
@@ -905,7 +903,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       } else {
         window.location.assign('{!URLFOR($Action.Tasky_Task__c.New)}');
       }
-      setTimeout(function(){creatable = true}, 2000);
+      setTimeout(function(){$scope.creatable = true; $scope.$apply();}, 2000);
     }
   }
 
