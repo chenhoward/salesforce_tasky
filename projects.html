@@ -249,6 +249,16 @@ applyBodyTag="false"
     margin-left: 15px;
   }
 
+  .footer-loader {
+    float: left;
+    width: 41px;
+    height: 41px;
+    margin: 7px;
+    margin-right: 10px;
+    margin-left: 15px;
+    display: none;
+  }
+
   input.switch:empty
   {
     margin-left: -9999px;
@@ -468,6 +478,13 @@ applyBodyTag="false"
     margin-top: 15px;
     width: 30px;
     height: 30px;
+  }
+
+  #new-loader {
+    margin-top: 15px;
+    width: 30px;
+    height: 30px;
+    display: none;
   }
 
   #newtag {
@@ -717,7 +734,8 @@ applyBodyTag="false"
     </div>
     <div id="footer">
       <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/home.svg')}" ng-click="sOneNav(currentProject.Id)"></img>
-      <img class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
+      <img id="footer-preload" class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/new.svg')}" ng-click="sOneCreate('Tasky_Task__c');"></img>
+      <img class="footer-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/gray-loader.gif')}"></img>
       <img id="collab-button" class="footer-button" src="{!URLFOR($Resource.TaskyAssets, 'images/collabs.svg')}"></img>
       <div>
         <input type="checkbox" id="switch1" name="switch1" class="switch" ng-model="all"/>
@@ -739,7 +757,9 @@ applyBodyTag="false"
       </section>
       <div id="header">Tasky</div>
       <div id="newbut" ng-click="sOneCreate('Tasky_Project__c');">
-        <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img></p>
+        <p><img id="new" src="{!URLFOR($Resource.ChecklistAssets, 'new.svg')}"></img>
+          <img id="new-loader" src="{!URLFOR($Resource.TaskyAssets, 'images/orange-loader.gif')}"></img>
+        </p>
         <p id="newtag"> New </p>
       </div>
       <section id="one">
