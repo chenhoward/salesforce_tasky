@@ -801,8 +801,7 @@ applyBodyTag="false"
           </div>
           <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
-            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
-            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-blurb late shorten"> {{task.Completed_Date__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>

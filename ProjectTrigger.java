@@ -9,3 +9,13 @@ trigger Collaborator_Create on Tasky_Project__c (after insert) {
         }
     }
 }
+
+trigger Task_Complete on Tasky_Task__c (before insert, before update) {
+    if (trigger.isInsert || trigger.isUpdate) {
+        for (Tasky_Task__c task: trigger.new){
+            if (task.Status__c == 'Done'){
+                task.Completed_Date__c = System.today();
+            }
+        }
+    }
+}
