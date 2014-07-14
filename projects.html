@@ -1128,20 +1128,6 @@ checklistApp.filter('allFilter', function() {
     return finalList;
   }
 });
-checklistApp.filter('allFilter', function() {
-  return function(input, scope, user) {
-    finalList = [];
-    if (scope.all) {
-      return input
-    }
-    for (var i = 0; i < input.length; i++) {
-      if (input[i].Assignee__c == scope.projectCollaboratorMap[scope.currentProject.Id].Id) {
-        finalList.push(input[i]);
-      }
-    }
-    return finalList;
-  }
-});
 </script>
 
 </apex:page>
