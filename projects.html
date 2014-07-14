@@ -745,7 +745,7 @@ applyBodyTag="false"
       <section id="one">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
-          <div ng-click="updateAssignee()">
+          <div ng-click="updateAssigneeNav(task)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
@@ -761,7 +761,7 @@ applyBodyTag="false"
       <section id="two">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this">
-          <div ng-click="updateAssignee()">
+          <div ng-click="updateAssigneeNav(task)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
@@ -777,7 +777,7 @@ applyBodyTag="false"
       <section id="three">
         <div class="spacer"></div>
         <div class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
-          <div ng-click="updateAssignee()">
+          <div ng-click="updateAssigneeNav(task)">
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
@@ -815,30 +815,20 @@ applyBodyTag="false"
         <div class="link">
           <input type="text" id="add-collab-input" ng-model="searchText" placeholder="Search for a person..."/>
         </div>
-        <div class="link">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/kevin.jpg')}"></img>
-          <p class="link-title shorten"> Kevin Wu </p>
-          <p class="link-blurb shorten"> kevinwu@gmail.com </p>
-          <img class="assignee-button" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
+        <div ng-repeat="collaborator in projectCollaborators | filter:searchText">
+        <div class="link" ng-show="currentTask.Assignee__c == collaborator.Id">
+          <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
+          <p class="link-title shorten"> {{collaborator.Name}} </p>
+          <p class="link-blurb shorten"> {{collaborator.User__r.Email}} </p>
+          <img class="assignee-button" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}" ng-click="assignTask(currentTask, collaborator)"></img>
         </div>
-        <div class="link transparent">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title shorten"> Howard Chen </p>
-          <p class="link-blurb shorten"> howardhoward@howard.com </p>
-          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
+        <div class="link transparent" ng-show="currentTask.Assignee__c != collaborator.Id">
+          <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
+          <p class="link-title shorten"> {{collaborator.Name}} </p>
+          <p class="link-blurb shorten"> {{collaborator.User__r.Email}} </p>
+          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}" ng-click="assignTask(currentTask, collaborator)"></img>
         </div>
-        <div class="link transparent">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title shorten"> Haward Chen </p>
-          <p class="link-blurb shorten"> hawardhoward@howard.com </p>
-          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
-        </div>
-        <div class="link transparent">
-          <img class="image" src="{!URLFOR($Resource.TaskyAssets, 'images/howard.jpg')}"></img>
-          <p class="link-title shorten"> Huward Chen </p>
-          <p class="link-blurb shorten"> huwardhoward@howard.com </p>
-          <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}"></img>
-        </div>
+      </div>
       </div>
     </div>
   </div>
@@ -1006,8 +996,39 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       );
   }
 
-  $scope.updateAssignee = function() {
-      switchCollab();
+  $scope.updateAssigneeNav = function(task) {
+    $scope.currentTask = task;
+    switchCollab();
+  }
+
+/** Strips task to allow it to be inserted to database. */
+  var stripTask = function(task) {
+        copy = {};
+        copy.Deadline__c = task.Deadline__c;
+        copy.Detail__c = task.Detail__c;
+        copy.Id = task.Id;
+        copy.Name = task.Name;
+        copy.Project__c = task.Project__c;
+        copy.Status__c = task.Status__c;
+        return copy;
+    }
+
+  $scope.assignTask = function(task, collaborator) {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.assignTask}',
+      stripTask(task),
+      collaborator.Id,
+      function(result, event) {
+        if (event.status) {
+          $scope.currentTask.Assignee__c = result.Assignee__c;
+          $scope.$apply();
+        } else if (event.type == 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
+        }
+      }
+      );
   }
 
   /** Updates the STATUS of Task with Id TASKID. */
