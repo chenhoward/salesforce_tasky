@@ -40,35 +40,37 @@ applyBodyTag="false"
         $("#newbut").animate({"left":"-100%"},100,'linear');
         $("#header").animate({"left":"-100%"},100,'linear');
       }
-      if (to.is("#one")) {
-        $("#pending-tab").addClass("active-tab");
-        $("#pending-alt").css("display", "inline");
-        $("#pending").css("display", "none");
-      }
-      if (from.is("#one")) {
-        $("#pending-tab").removeClass("active-tab");
-        $("#pending").css("display", "inline");
-        $("#pending-alt").css("display", "none");
-      }
-      if (to.is("#two")) {
-        $("#doing-tab").addClass("active-tab");
-        $("#doing-alt").css("display", "inline");
-        $("#doing").css("display", "none");
-      }
-      if (from.is("#two")) {
-        $("#doing-tab").removeClass("active-tab");
-        $("#doing").css("display", "inline");
-        $("#doing-alt").css("display", "none");
-      }
-      if (to.is("#three")) {
-        $("#complete-tab").addClass("active-tab");
-        $("#complete-alt").css("display", "inline");
-        $("#complete").css("display", "none");
-      }
-      if (from.is("#three")) {
-        $("#complete-tab").removeClass("active-tab");
-        $("#complete").css("display", "inline");
-        $("#complete-alt").css("display", "none");
+      if ($(window).width() < 1000) {
+        if (to.is("#one")) {
+          $("#pending-tab").addClass("active-tab");
+          $("#pending-alt").css("display", "inline");
+          $("#pending").css("display", "none");
+        }
+        if (from.is("#one")) {
+          $("#pending-tab").removeClass("active-tab");
+          $("#pending").css("display", "inline");
+          $("#pending-alt").css("display", "none");
+        }
+        if (to.is("#two")) {
+          $("#doing-tab").addClass("active-tab");
+          $("#doing-alt").css("display", "inline");
+          $("#doing").css("display", "none");
+        }
+        if (from.is("#two")) {
+          $("#doing-tab").removeClass("active-tab");
+          $("#doing").css("display", "inline");
+          $("#doing-alt").css("display", "none");
+        }
+        if (to.is("#three")) {
+          $("#complete-tab").addClass("active-tab");
+          $("#complete-alt").css("display", "inline");
+          $("#complete").css("display", "none");
+        }
+        if (from.is("#three")) {
+          $("#complete-tab").removeClass("active-tab");
+          $("#complete").css("display", "inline");
+          $("#complete-alt").css("display", "none");
+        }
       }
     }
   }
@@ -365,11 +367,7 @@ applyBodyTag="false"
     width: 34%;
   }
 
-  #pending {
-    display: none;
-  }
-
-  #doing-alt, #complete-alt {
+  #doing-alt, #complete-alt, #pending-alt {
     display: none;
   }
 
@@ -641,13 +639,62 @@ applyBodyTag="false"
   html { height: 100%; margin: 0; padding: 0;}
 
   body { height: 100%; margin: 0; padding: 0 }
+
+  @media (min-width: 1000px) {
+    #pending, #doing, #complete {
+      display: none;
+      margin-top: 12px;
+      width: 40px;
+      height: 40px;
+    }
+
+    #pending-alt, #doing-alt, #complete-alt {
+      display: inline;
+      margin-top: 12px;
+      width: 40px;
+      height: 40px;
+    }
+
+    #pending-tag, #doing-tag, #complete-tag {
+      color: #ff9d00;
+    }
+
+    #one {
+      box-sizing: border-box;
+      position: absolute;
+      top: 0% !important;
+      left: 0% !important;
+      width: 33% !important;
+      border-right: 1px solid #ccc;
+    }
+    #two {
+      box-sizing: border-box;
+      position: absolute;
+      top: 0% !important;
+      left: 33% !important;
+      width: 34% !important;
+      border-right: 1px solid #ccc;
+    }
+    #three {
+      position: absolute;
+      top: 0% !important;
+      left: 67% !important;
+      width: 33% !important;
+    }
+    .navbut:hover {
+      cursor: default;
+    }
+    .link:hover, #newbut:hover, .footer-button:hover {
+      cursor: pointer;
+    }
+  }
   </style>
 </head>
 <body ng-app="taskyApp">
   <div id="main-page" ng-controller="ProjectCtrl">
     <div id="navbar">
       <!-- Currently no icons -->
-      <a class="navbut active-tab" id="pending-tab" data-section="one" href="#">
+      <a class="navbut" id="pending-tab" data-section="one" href="#">
         <p> <img id="pending" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img> </p>
         <p> <img id="pending-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/pending-alt.svg')}"></img> </p>
         <p id="pending-tag"> Pending </p>
