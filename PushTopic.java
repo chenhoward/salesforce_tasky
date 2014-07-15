@@ -11,7 +11,7 @@ insert pushTopic;
 
 PushTopic pushTopic = new PushTopic();
 pushTopic.Name = 'TaskUpdates';
-pushTopic.Query = 'SELECT Id, Name, Deadline__c, Project__c, Status__c, Assignee__c FROM Tasky_Task__c';
+pushTopic.Query = 'SELECT Id, Name, Due_Date__c, Project__c, Status__c, Assignee__c, Late__c FROM Tasky_Task__c';
 pushTopic.ApiVersion = 30.0;
 pushTopic.NotifyForOperationCreate = true;
 pushTopic.NotifyForOperationUpdate = true;
