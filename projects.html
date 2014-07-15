@@ -1021,18 +1021,24 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         copy.Name = task.Name;
         copy.Project__c = task.Project__c;
         copy.Status__c = task.Status__c;
+        copy.Assignee__c = task.Assignee__c;
         return copy;
     }
 
   /** Assigns TASK to COLLABORATOR. */
   $scope.assignTask = function(task, collaborator) {
+    $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 200 }, 'linear');
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.assignTask}',
-      stripTask(task),
+      angular.copy(task),
       collaborator.Id,
       function(result, event) {
         if (event.status) {
           $scope.currentTask.Assignee__c = result.Assignee__c;
+          $scope.currentTask.Assignee__r = result.Assignee__r;
           $scope.$apply();
         } else if (event.type == 'exception') {
           console.log('exception');
