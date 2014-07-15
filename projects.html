@@ -770,8 +770,9 @@ applyBodyTag="false"
           </div>
           <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
-            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
-            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            {{(task.Due_Date__c)}}
+            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
+            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
         </div>
@@ -786,8 +787,8 @@ applyBodyTag="false"
           </div>
           <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
-            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp;  </p>
-            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{task.Deadline__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
+            <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
         </div>
@@ -802,7 +803,7 @@ applyBodyTag="false"
           </div>
           <div ng-click="sOneNav(task.Id)">
             <p class="link-title shorten"> {{task.Name}} </p>
-            <p class="link-blurb late shorten"> {{task.Completed_Date__c | date:'MM/dd/yyyy @ h:mma'}} &nbsp; </p>
+            <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Completed_Date__c) | date:'mediumDate'}} &nbsp;  </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
         </div>
@@ -1015,7 +1016,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 /** Strips task to allow it to be inserted to database. */
   var stripTask = function(task) {
         copy = {};
-        copy.Deadline__c = task.Deadline__c;
+        copy.Due_Date__c = task.Due_Date__c;
         copy.Detail__c = task.Detail__c;
         copy.Id = task.Id;
         copy.Name = task.Name;
@@ -1133,6 +1134,19 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $scope.convertTime = function(time) {
       var date = new Date(time);
       return date.toString();
+    }
+  
+    var toUTCDate = function(date) {
+      var _utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),  date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+      return _utc;
+    }
+
+    $scope.millisToUTCDate = function(millis){
+      if (millis) {
+        return toUTCDate(new Date(millis));
+      } else {
+        return '';
+      }
     }
 
     $.cometd.init({
