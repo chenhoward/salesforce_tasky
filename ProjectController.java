@@ -11,7 +11,7 @@ global with Sharing class ProjectController {
     /** Gets all Tasks associated with the Project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Task__c[] getTasks(Id projectId) {
-        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Assignee__r.User__c, Due_Date__c, Completed_Date__c FROM Tasky_Task__c WHERE Project__c =: projectId];
+        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Assignee__r.User__c, Due_Date__c, Completed_Date__c, Project__c FROM Tasky_Task__c WHERE Project__c =: projectId];
         return tasks;
     }
 
@@ -22,7 +22,7 @@ global with Sharing class ProjectController {
         if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
             update task;
         }
-        return getTasks(task.Id)
+        return getTasks(task.Project__c);
     }
 
     /** Adds a collaborator with Id USERID to a project with Id PROJECTID. */
