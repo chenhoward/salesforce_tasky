@@ -50,7 +50,7 @@ global with Sharing class ProjectController {
     @RemoteAction
     global static User[] getOrgUsers(Id projId) {
         Tasky_Collaborator__c[] collaborators = getProjectCollaborators(projId);
-        User[] users = [SELECT Name, Id FROM User];
+        User[] users = [SELECT Name, Id, Title FROM User];
         User[] finalList = new List<User>();
         for (Integer i = 0; i < users.size(); i++) {
             if (!isUserACollaborator(users[i], collaborators)) {
@@ -84,7 +84,7 @@ global with Sharing class ProjectController {
     /** Returns all the Collaborators working on project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
-        Tasky_Collaborator__c[] collaborators = [SELECT Id, Name, User__c, User__r.Email FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        Tasky_Collaborator__c[] collaborators = [SELECT Id, Name, User__c, User__r.Email, User__r.Title FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
         return collaborators;
     }
 
