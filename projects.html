@@ -171,19 +171,19 @@ applyBodyTag="false"
     left: 0;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    height: 100px;
+    height: 80px;
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #ccc;
-    padding-top: 30px;
-    font-size: 36px;
+    padding-top: 22px;
+    font-size: 30px;
     font-weight: 700;
     color: #ff9d00;
     text-align: center;
   }
 
   .small-spacer {
-    height: 100px;
+    height: 80px;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -658,21 +658,25 @@ applyBodyTag="false"
 
   @media (min-width: 1000px) {
     #pending, #doing, #complete {
-      display: none;
+      display: inline !important;
       margin-top: 12px;
       width: 40px;
       height: 40px;
     }
 
     #pending-alt, #doing-alt, #complete-alt {
-      display: inline;
+      display: none !important;
       margin-top: 12px;
       width: 40px;
       height: 40px;
     }
 
     #pending-tag, #doing-tag, #complete-tag {
-      color: #ff9d00;
+      color: #ccc !important;
+    }
+
+    .active-tab {
+      border: none !important;
     }
 
     #one {
