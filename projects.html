@@ -774,7 +774,7 @@ applyBodyTag="false"
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
-          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task.Id, 'Doing')"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task, 'Doing')"></img>
         </div>
         <div class="spacer"></div>
       </section>
@@ -790,7 +790,7 @@ applyBodyTag="false"
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
-          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task.Id, 'Done')"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task, 'Done')"></img>
         </div>
         <div class="spacer"></div>
       </section>
@@ -805,7 +805,7 @@ applyBodyTag="false"
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Completed_Date__c) | date:'mediumDate'}} &nbsp;  </p>
           </div>
-          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task.Id, 'Pending')"></img>
+          <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task, 'Pending')"></img>
         </div>
         <div class="spacer"></div>
       </section>
@@ -1045,13 +1045,14 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   }
 
   /** Updates the STATUS of Task with Id TASKID. */
-  $scope.updateTaskStatus = function(taskId, status) {
+  $scope.updateTaskStatus = function(task, status) {
+    console.log(task);
+    console.log(status);
     $scope.streamUpdate = false;
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.updateTaskStatus}',
-      taskId,
+      stripTask(task),
       status,
-      $scope.currentProject.Id,
       function(result, event) {
         if (event.status) {
           $scope.tasks = result;

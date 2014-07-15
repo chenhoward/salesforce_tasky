@@ -17,19 +17,12 @@ global with Sharing class ProjectController {
 
     /** Update the STATUS of a Task with Id TASKID and returns all the tasks. */
     @RemoteAction
-    global static Tasky_Task__c[] updateTaskStatus(Id taskID, String status, Id projectId) {
-        Tasky_Task__c[] tasks = getTasks(projectId);
-        Tasky_Task__c task;
-        for (Integer i = 0; i < tasks.size(); i++) {
-            if (tasks[i].Id == taskId) {
-                task = tasks[i];
-            }
-        }
+    global static Tasky_Task__c[] updateTaskStatus(Tasky_Task__c task, String status) {
         task.Status__c = status;
         if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
             update task;
         }
-        return tasks;
+        return getTasks(task.Id)
     }
 
     /** Adds a collaborator with Id USERID to a project with Id PROJECTID. */
