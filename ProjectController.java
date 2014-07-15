@@ -95,6 +95,7 @@ global with Sharing class ProjectController {
         if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
             update task;
         }
+        task = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Assignee__r.User__c, Due_Date__c, Completed_Date__c, Project__c FROM Tasky_Task__c WHERE Id =: task.Id];
         return task;
     }
 
