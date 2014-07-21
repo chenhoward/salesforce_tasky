@@ -19,6 +19,14 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'stream/json2.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'stream/jquery.cometd.js')}"/>
   <script type="text/javascript">
+  function showTaskMenu() {
+
+  }
+
+  function hideTaskMenu() {
+
+  }
+
   function setSection(to, from) {
     $('#collab').animate({"top":"100%"},100);
     if (!(to.hasClass("active")))
@@ -737,7 +745,8 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
-          <div ng-click="sOneNav(task.Id)">
+          <!--<div ng-click="sOneNav(task.Id)">-->
+          <div onclick="showTaskMenu()">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
@@ -753,7 +762,8 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
-          <div ng-click="sOneNav(task.Id)">
+          <!--<div ng-click="sOneNav(task.Id)">-->
+          <div onclick="showTaskMenu()">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
@@ -769,7 +779,8 @@ applyBodyTag="false"
             <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
             <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
-          <div ng-click="sOneNav(task.Id)">
+          <!--<div ng-click="sOneNav(task.Id)">-->
+          <div onclick="showTaskMenu()">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten"> {{millisToUTCDate(task.Completed_Date__c) | date:'mediumDate'}} &nbsp;  </p>
           </div>
@@ -890,8 +901,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         } else {
           console.log('error');
         }
-      }
-      )
+      })
   }
 
   /** Gets all the Collaborators in a project. */
@@ -914,8 +924,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         } else {
           console.log('error');
         }
-      }
-      );
+      });
   }
 
   /** Gets all currentProjects. */
@@ -934,8 +943,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         } else {
           console.log('error');
         }
-      }
-      );
+      });
   }
 
   /** Transition to a PROJECT. */
