@@ -742,8 +742,8 @@ applyBodyTag="false"
         <div class="spacer"></div>
         <div id="{{task.Id}}" class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
           <div ng-click="updateAssigneeNav(task)">
-            <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
-            <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+            <img class="image" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
+            <img class="image" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div onclick="showTaskMenu()">
@@ -759,8 +759,8 @@ applyBodyTag="false"
         <div class="spacer"></div>
         <div id="{{task.Id}}" class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this">
           <div ng-click="updateAssigneeNav(task)">
-            <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
-            <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+            <img class="image" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
+            <img class="image" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div onclick="showTaskMenu()">
@@ -776,8 +776,8 @@ applyBodyTag="false"
         <div class="spacer"></div>
         <div id="{{task.Id}}" class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
           <div ng-click="updateAssigneeNav(task)">
-            <img class="image" ng-show="task.Assignee__r" src="{{idToUrlMap[task.Assignee__r.User__c]}}"></img>
-            <img class="image" ng-show="!task.Assignee__r" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+            <img class="image" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
+            <img class="image" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div onclick="showTaskMenu()">
@@ -814,13 +814,13 @@ applyBodyTag="false"
           <input type="text" id="add-collab-input" ng-model="searchText" placeholder="Search for a person..."/>
         </div>
         <div ng-repeat="collaborator in projectCollaborators | filter:searchText">
-          <div class="link" ng-show="currentTask.Assignee__c == collaborator.Id">
+          <div class="link" ng-show="currentTask.Assignee__c == collaborator.User__c">
             <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
             <p class="link-title shorten"> {{collaborator.Name}} </p>
             <p class="link-blurb shorten"> {{collaborator.User__r.Title}}  &nbsp;  </p>
             <img class="assignee-button" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}" ng-click="assignTask(currentTask, collaborator)"></img>
           </div>
-          <div class="link transparent" ng-show="currentTask.Assignee__c != collaborator.Id">
+          <div class="link transparent" ng-show="currentTask.Assignee__c != collaborator.User__c">
             <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
             <p class="link-title shorten"> {{collaborator.Name}} </p>
             <p class="link-blurb shorten"> {{collaborator.User__r.Title}}  &nbsp;  </p>
@@ -988,7 +988,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           for (var i = 0; i < result.length; i++) {
             var task = result[i];
             if (task.Assignee__c) {
-              $scope.userIds[task.Assignee__r.User__c] = true;
+              $scope.userIds[task.Assignee__c] = true;
             }
           }
           console.log('here');
@@ -1031,11 +1031,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.assignTask}',
       angular.copy(task),
-      collaborator.Id,
+      collaborator.User__c,
       function(result, event) {
         if (event.status) {
           $scope.currentTask.Assignee__c = result.Assignee__c;
-          $scope.currentTask.Assignee__r = result.Assignee__r;
           $scope.$apply();
         } else if (event.type == 'exception') {
           console.log('exception');
@@ -1189,7 +1188,7 @@ checklistApp.filter('allFilter', function() {
       return input
     }
     for (var i = 0; i < input.length; i++) {
-      if (input[i].Assignee__r && (input[i].Assignee__r.User__c == '{!$User.Id}')) {
+      if (input[i].Assignee__c && (input[i].Assignee__c == '{!$User.Id}')) {
         finalList.push(input[i]);
       }
     }
