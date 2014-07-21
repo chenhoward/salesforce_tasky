@@ -19,3 +19,20 @@ trigger Task_Complete on Tasky_Task__c (before insert, before update) {
         }
     }
 }
+
+trigger Task_Assign on Tasky_Task__c (before insert, before update) {
+    if (trigger.isInsert || trigger.isUpdate) {
+        for (Tasky_Task__c task: trigger.new){
+            Id owner = task.Owner__c;
+            Tasky_Collaborator__c[] collaborators = [SELECT Name FROM Tasky_Collaborator__c WHERE Project__c =: task.Project__c AND User__c =: task.Owner__c];
+            if (collaborators.size() == 0 && owner != null) {
+                task.addError('The User is not a collaborator in this project');
+            } else if (owner != null && collaborators.size() > 0) {
+                task.Assignee__c = collaborators[0]. Id;
+            } else if (owner == null && task.Assignee__c != null) {
+                Tasky_Collaborator__c collaborator = [SELECT User__c FROM Tasky_Collaborator__c WHERE Id =: task.Assignee__c];
+                task.Owner__c = collaborator.User__c;
+            }
+        }
+    }
+}

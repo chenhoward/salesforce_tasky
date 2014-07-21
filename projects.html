@@ -1027,6 +1027,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 100 });
     $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 100 });
     $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 100 });
+    task.Owner__c = null;
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.assignTask}',
       angular.copy(task),
