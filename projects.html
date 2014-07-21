@@ -20,11 +20,11 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'stream/jquery.cometd.js')}"/>
   <script type="text/javascript">
   function setSection(to, from) {
-    $('#collab').animate({"top":"100%"},100,'linear');
+    $('#collab').animate({"top":"100%"},100);
     if (!(to.hasClass("active")))
     {
-      from.animate({"left":"-100%"},100,'linear')
-      to.animate({"left":"0%"},100,'linear',function()
+      from.animate({"left":"-100%"},100)
+      to.animate({"left":"0%"},100,function()
       {
         from.css("left","100%");
         from.removeClass("active");
@@ -32,12 +32,12 @@ applyBodyTag="false"
       });
       if (to.is("#one-overall")) {
         $("#newbut").animate({"left":"100%"}, 0);
-        $("#newbut").animate({"left":"0"},100,'linear');
+        $("#newbut").animate({"left":"0"},100);
         $("#header").animate({"left":"100%"}, 0);
-        $("#header").animate({"left":"0"},100,'linear');
+        $("#header").animate({"left":"0"},100);
       } else {
-        $("#newbut").animate({"left":"-100%"},100,'linear');
-        $("#header").animate({"left":"-100%"},100,'linear');
+        $("#newbut").animate({"left":"-100%"},100);
+        $("#header").animate({"left":"-100%"},100);
       }
       if ($(window).width() < 1000) {
         if (to.is("#one")) {
@@ -88,10 +88,10 @@ applyBodyTag="false"
       setSection($toSlide, $fromSlide);
     });
     $('#collab-button').on('click', function(event) {
-      $('#collab').animate({"top":"0%"},100,'linear');
+      $('#collab').animate({"top":"0%"},100);
     });
     $('#hide-collab').on('click', function(event) {
-      $('#collab').animate({"top":"100%"},100,'linear');
+      $('#collab').animate({"top":"100%"},100);
     });
     $('#hide-switch-collab').on('click', function(event) {
       $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 100 });
@@ -992,10 +992,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Assigns TASK to COLLABORATOR. */
   $scope.assignTask = function(task, collaborator) {
-    $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 200 }, 'linear');
-    $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 200 }, 'linear');
-    $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 200 }, 'linear');
-    $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 100 });
+    $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 100 });
+    $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 100 });
+    $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 100 });
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.assignTask}',
       angular.copy(task),
