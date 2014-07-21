@@ -74,10 +74,10 @@ applyBodyTag="false"
     }
   }
   function switchCollab() {
-    $('#switch-collab').animate({"top":"0%"}, { queue: false, duration: 200 }, 'linear');
-    $('#switch-collab').animate({"left":"0%"},{ queue: false, duration: 200 }, 'linear');
-    $('#switch-collab').animate({"bottom":"0%"},{ queue: false, duration: 200 }, 'linear');
-    $('#switch-collab').animate({"right":"0%"},{ queue: false, duration: 200 }, 'linear');
+    $('#switch-collab').animate({"top":"0%"}, { queue: false, duration: 100 });
+    $('#switch-collab').animate({"left":"0%"}, { queue: false, duration: 100 });
+    $('#switch-collab').animate({"bottom":"0%"}, { queue: false, duration: 100 });
+    $('#switch-collab').animate({"right":"0%"}, { queue: false, duration: 100 });
   }
   $(document).ready(function(){
     $('a').on('click', function(event)
@@ -94,10 +94,10 @@ applyBodyTag="false"
       $('#collab').animate({"top":"100%"},100,'linear');
     });
     $('#hide-switch-collab').on('click', function(event) {
-      $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 200 }, 'linear');
-      $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 200 }, 'linear');
-      $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 200 }, 'linear');
-      $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 200 }, 'linear');
+      $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 100 });
+      $('#switch-collab').animate({"left":"50%"}, { queue: false, duration: 100 });
+      $('#switch-collab').animate({"bottom":"50%"}, { queue: false, duration: 100 });
+      $('#switch-collab').animate({"right":"50%"}, { queue: false, duration: 100 });
     });
   });
   window.addEventListener('load', function() {
@@ -618,39 +618,6 @@ applyBodyTag="false"
     opacity: 0.5;
   }
 
-  /*
-  .animate-leave {
-    position: relative;
-    display: block;
-  } 
-
-  .animate-enter, .animater-enter.animate-enter-active {
-    animation: none;
-    -webkit-animation: none;
-  }
- 
-  .animate-leave.animate-leave-active {
-    animation: leave 0.25s;
-    -webkit-animation: leave 0.25s;
-    animation-fill-mode: both;
-  }
-
-  @keyframes leave
-  {
-    0% {right: 0%; height: 80px;}
-    50% {right: -100%; height: 80px;}
-    99% {right: -100%; height: 0px;}
-    100% {right: -100%; height: 0px; display: none;}
-  }
-
-  @-webkit-keyframes leave
-  {
-    0% {right: 0%; height: 80px;}
-    50% {right: -100%; height: 80px;}
-    99% {right: -100%; height: 0px;}
-    100% {right: -100%; height: 0px; display: none;}
-  } */
-
   html { height: 100%; margin: 0; padding: 0;}
 
   body { height: 100%; margin: 0; padding: 0 }
@@ -712,7 +679,6 @@ applyBodyTag="false"
 <body ng-app="taskyApp">
   <div id="main-page" ng-controller="ProjectCtrl">
     <div id="navbar">
-      <!-- Currently no icons -->
       <a class="navbut" id="pending-tab" data-section="one" href="#">
         <p> <img id="pending" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}"></img> </p>
         <p> <img id="pending-alt" src="{!URLFOR($Resource.TaskyAssets, 'images/pending-alt.svg')}"></img> </p>
@@ -858,9 +824,7 @@ applyBodyTag="false"
 <script>
 /** Angular Script */
 var checklistApp = angular.module('taskyApp', []);
-
 checklistApp.controller('ProjectCtrl', function($scope) {
-
   /** An array of Projects. */
   $scope.projects = [];
   /** An array of Tasks. */
@@ -885,7 +849,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.streamUpdate = true;
   /** True if we can go to the create view. */
   $scope.creatable = true;
-
 
   /** Naviages to the view page of the object with ID. */
   $scope.sOneNav = function(Id) {
@@ -1005,8 +968,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         } else {
           console.log('error');
         }
-      }
-      );
+      });
   }
 
   /** Select a collaborator for a TASK. */
@@ -1015,18 +977,18 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     switchCollab();
   }
 
-/** Strips task to allow it to be inserted to database. */
+  /** Strips task to allow it to be inserted to database. */
   var stripTask = function(task) {
-        copy = {};
-        copy.Due_Date__c = task.Due_Date__c;
-        copy.Detail__c = task.Detail__c;
-        copy.Id = task.Id;
-        copy.Name = task.Name;
-        copy.Project__c = task.Project__c;
-        copy.Status__c = task.Status__c;
-        copy.Assignee__c = task.Assignee__c;
-        return copy;
-    }
+    copy = {};
+    copy.Due_Date__c = task.Due_Date__c;
+    copy.Detail__c = task.Detail__c;
+    copy.Id = task.Id;
+    copy.Name = task.Name;
+    copy.Project__c = task.Project__c;
+    copy.Status__c = task.Status__c;
+    copy.Assignee__c = task.Assignee__c;
+    return copy;
+  }
 
   /** Assigns TASK to COLLABORATOR. */
   $scope.assignTask = function(task, collaborator) {
@@ -1048,8 +1010,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         } else {
           console.log('error');
         }
-      }
-      );
+      });
   }
 
   /** Updates the STATUS of Task with Id TASKID. */
@@ -1073,8 +1034,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         } else {
           console.log('error');
         }
-      }
-      );
+      });
   }
 
     getProjects();
@@ -1098,89 +1058,85 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           console.log('error');
           console.log(event.message);
         }
-      }
-      );
+      });
   }
 
-    /** Adds a collaborator that ties the user with Id USERID to a
-    *  Project with Id PROJECTID. */
-    $scope.addCollaborator = function(projectId, userId) {
-      Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.ProjectController.addCollaborator}',
-        projectId,
-        userId,
-        function(result, event) {
-          if (event.status) {
-            $scope.users = result[0];
-            $scope.projectCollaborators = result[1];
-            $scope.$apply();
-          } else if (event.type === 'exception') {
-            console.log('exception');
-          } else {
-            console.log('error');
-          }
+  /** Adds a collaborator that ties the user with Id USERID to a
+  *  Project with Id PROJECTID. */
+  $scope.addCollaborator = function(projectId, userId) {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.addCollaborator}',
+      projectId,
+      userId,
+      function(result, event) {
+        if (event.status) {
+          $scope.users = result[0];
+          $scope.projectCollaborators = result[1];
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
         }
-        );
-    }
+      });
+  }
 
-    /** Removes the Collaborator with Id COLLABORATOR ID from a Project. */
-    $scope.removeCollaborator = function(collaboratorId) {
-      Visualforce.remoting.Manager.invokeAction(
-        '{!$RemoteAction.ProjectController.removeCollaborator}',
-        collaboratorId,
-        function(result, event) {
-          if (event.status) {
-            $scope.users = result[0];
-            $scope.projectCollaborators = result[1];
-            $scope.$apply();
-          } else if (event.type === 'exception') {
-            console.log('exception');
-          } else {
-            console.log('error');
-          }
+  /** Removes the Collaborator with Id COLLABORATOR ID from a Project. */
+  $scope.removeCollaborator = function(collaboratorId) {
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.removeCollaborator}',
+      collaboratorId,
+      function(result, event) {
+        if (event.status) {
+          $scope.users = result[0];
+          $scope.projectCollaborators = result[1];
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          console.log('exception');
+        } else {
+          console.log('error');
         }
-        );
+      });
+  }
+
+  $scope.convertTime = function(time) {
+    var date = new Date(time);
+    return date.toString();
+  }
+
+  var toUTCDate = function(date) {
+    var _utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),  date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+    return _utc;
+  }
+
+  $scope.millisToUTCDate = function(millis){
+    if (millis) {
+      return toUTCDate(new Date(millis));
+    } else {
+      return '';
     }
+  }
 
-    $scope.convertTime = function(time) {
-      var date = new Date(time);
-      return date.toString();
+  $.cometd.init({
+    url: window.location.protocol+'//'+window.location.hostname+'/cometd/24.0/',
+    requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'}
+  });
+
+  // Subscribe to a topic. JSON-encoded update will be returned
+  // in the callback
+
+  $.cometd.subscribe('/topic/ProjectUpdates', function(message) {
+    getProjects();
+  });
+
+  $.cometd.subscribe('/topic/TaskUpdates', function(message) {
+    if ($scope.streamUpdate) {
+      $scope.getTasks($scope.currentProject.Id);
+    } else {
+      $scope.streamUpdate = true;
     }
-  
-    var toUTCDate = function(date) {
-      var _utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),  date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-      return _utc;
-    }
-
-    $scope.millisToUTCDate = function(millis){
-      if (millis) {
-        return toUTCDate(new Date(millis));
-      } else {
-        return '';
-      }
-    }
-
-    $.cometd.init({
-     url: window.location.protocol+'//'+window.location.hostname+'/cometd/24.0/',
-     requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'}
-   });
-
-           // Subscribe to a topic. JSON-encoded update will be returned
-           // in the callback
-
-           $.cometd.subscribe('/topic/ProjectUpdates', function(message) {
-            getProjects();
-          });
-
-           $.cometd.subscribe('/topic/TaskUpdates', function(message) {
-            if ($scope.streamUpdate) {
-              $scope.getTasks($scope.currentProject.Id);
-            } else {
-              $scope.streamUpdate = true;
-            }
-          });
-
-         });
+  });
+});
 
 checklistApp.filter('listType', function() {
   return function(input, type) {
@@ -1191,9 +1147,9 @@ checklistApp.filter('listType', function() {
       }
     }
     return finalList;
-
   }
 });
+
 checklistApp.filter('allFilter', function() {
   return function(input, scope, user) {
     finalList = [];
@@ -1209,5 +1165,4 @@ checklistApp.filter('allFilter', function() {
   }
 });
 </script>
-
 </apex:page>
