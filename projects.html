@@ -997,11 +997,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   }
 
   $scope.showTaskMenu = function(task) {
-    $('.' + task.Id).animate({"left":"0"}, 100);
+    $('.' + task.Id).animate({"left":"0"}, 200);
   }
 
   $scope.hideTaskMenu = function(task) {
-    $('.' + task.Id).animate({"left":"100%"}, 100);
+    $('.' + task.Id).animate({"left":"100%"}, 200);
   }
 
   $scope.sOneCreate = function(type) {
