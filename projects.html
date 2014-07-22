@@ -818,7 +818,7 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
             </div>
           </div>
         </div>
@@ -852,7 +852,7 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
             </div>
           </div>
         </div>
@@ -885,7 +885,7 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
             </div>
           </div>
         </div>
@@ -997,6 +997,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   }
 
   $scope.showTaskMenu = function(task) {
+    $scope.currentTask = task;
     $('.' + task.Id).animate({"left":"0"}, 200);
   }
 
@@ -1240,6 +1241,26 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           console.log('error');
         }
       });
+  }
+
+  /** Deletes the TASK. */
+  $scope.deleteTask = function(task) {
+    console.log(task);
+    delete task.$$hashKey;
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.deleteTask}',
+      task,
+      function(result, event) {
+        if (event.status) {
+          $scope.tasks = result;
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          alert('exception' + event.message);
+        } else {
+          alert('error');
+        }
+      }
+    );
   }
 
   $scope.convertTime = function(time) {

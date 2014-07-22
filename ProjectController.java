@@ -121,9 +121,10 @@ global with Sharing class ProjectController {
     }
 
     @RemoteAction
-    global static void deleteTask(Tasky_Task__c task) {
+    global static Tasky_Task__c[] deleteTask(Tasky_Task__c task) {
         if (Schema.SObjectType.Tasky_Task__c.isDeletable()) {
             delete task;
         }
+        return getTasks(task.Project__c);
     }
 }
