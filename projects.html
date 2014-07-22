@@ -1348,6 +1348,9 @@ checklistApp.filter('listType', function() {
         finalList.push(input[i]);
       }
     }
+    if (type == 'Done') {
+      finalList.sort(function(a, b) { return b.Completed_Date__c - a.Completed_Date__c})
+    }
     return finalList;
   }
 });
