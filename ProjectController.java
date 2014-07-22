@@ -4,14 +4,20 @@ global with Sharing class ProjectController {
     /** Gets all the Projects the user can see. */
     @RemoteAction
     global static Tasky_Project__c[] getProjects() {
-        Tasky_Project__c[] projects = [SELECT Name, Id, Due_Date__c, Description__c, CreatedById FROM Tasky_Project__c];
+        Tasky_Project__c[] projects;
+        if (Schema.SObjectType.Tasky_Project__c.isAccessible()) {
+            projects = [SELECT Name, Id, Due_Date__c, Description__c, CreatedById FROM Tasky_Project__c];
+        }
         return projects;
     }
 
     /** Gets all Tasks associated with the Project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Task__c[] getTasks(Id projectId) {
-        Tasky_Task__c[] tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Due_Date__c, Completed_Date__c, Project__c FROM Tasky_Task__c WHERE Project__c =: projectId ORDER BY Due_Date__c ASC NULLS LAST];
+        Tasky_Task__c[] tasks;
+        if (Schema.SObjectType.Tasky_Task__c.isAccessible()) {
+            tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Due_Date__c, Completed_Date__c, Project__c FROM Tasky_Task__c WHERE Project__c =: projectId ORDER BY Due_Date__c ASC NULLS LAST];
+        }
         return tasks;
     }
 
@@ -29,7 +35,10 @@ global with Sharing class ProjectController {
     @RemoteAction
     global static List<SObject[]> addCollaborator(Id projectId, Id userId) {
         Tasky_Collaborator__c collaborator = new Tasky_Collaborator__c();
-        User[] users= [SELECT Name FROM User WHERE Id =: userId];
+        User[] users;
+        if (Schema.SObjectType.Tasky_Collaborator__c.isAccessible()) {
+            users = [SELECT Name FROM User WHERE Id =: userId];
+        }
         collaborator.Name = users[0].Name;
         collaborator.User__c = userId;
         collaborator.Project__c = projectId;
@@ -95,7 +104,9 @@ global with Sharing class ProjectController {
         if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
             update task;
         }
-        task = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Due_Date__c, Completed_Date__c, Project__c FROM Tasky_Task__c WHERE Id =: task.Id];
+        if (Schema.SObjectType.Tasky_Task__c.isAccessible()) {
+           task = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Due_Date__c, Completed_Date__c, Project__c FROM Tasky_Task__c WHERE Id =: task.Id];
+        }
         return task;
     }
 
@@ -109,4 +120,10 @@ global with Sharing class ProjectController {
         return imageUrls;
     }
 
+    @RemoteAction
+    global static void deleteTask(Tasky_Task__c task) {
+        if (Schema.SObjectType.Tasky_Task__c.isDeletable()) {
+            delete task;
+        }
+    }
 }
