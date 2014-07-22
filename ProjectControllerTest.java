@@ -47,4 +47,14 @@ public class ProjectControllerTest{
         collaborator = [SELECT Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
         System.assertEquals(UserInfo.getName(), collaborator.Name);
     }
+    
+    static testmethod void testAssignTask() {
+        Id projectId = setup();
+        Tasky_Task__c[] tasks = ProjectController.getTasks(projectId);
+        System.assertEquals(null, tasks[0].Assignee__c);
+        Tasky_Collaborator__c collaborator = [SELECT Name, User__c FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        ProjectController.assignTask(tasks[0], collaborator.User__c);
+        tasks = ProjectController.getTasks(projectId);
+        System.assertEquals(UserInfo.getUserId(), tasks[0].Assignee__c);
+    }
 }
