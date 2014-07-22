@@ -987,14 +987,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   /** True if we can go to the create view. */
   $scope.creatable = true;
 
-  /** Naviages to the view page of the object with ID. */
-  $scope.sOneNav = function(Id) {
-    if((typeof sforce != 'undefined') && (sforce != null)) {
-      sforce.one.navigateToSObject(Id);
-    } else {
-      window.location.assign("/" + Id);
-    }
-  }
 
   $scope.showTaskMenu = function(task) {
     $scope.currentTask = task;
@@ -1261,6 +1253,25 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         }
       }
     );
+  }
+
+  /** Naviages to the view page of the object with ID. */
+  $scope.sOneNav = function(Id) {
+    if((typeof sforce != 'undefined') && (sforce != null)) {
+      sforce.one.navigateToSObject(Id);
+    } else {
+      window.location.assign("/" + Id);
+    }
+  }
+
+  /** Goes to the edit page. */
+  $scope.editNav = function(task) {
+    sforce.one.editRecord(task.Id);
+  }
+
+  /** Goes to the edit page. */
+  $scope.chatterNav = function(task) {
+    sforce.one.navigateToSObject(task.Id, chatter);
   }
 
   $scope.convertTime = function(time) {
