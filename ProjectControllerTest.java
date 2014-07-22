@@ -57,4 +57,21 @@ public class ProjectControllerTest{
         tasks = ProjectController.getTasks(projectId);
         System.assertEquals(UserInfo.getUserId(), tasks[0].Assignee__c);
     }
+    
+    static testmethod void testDeleteTask() {
+        Id projectId = setup();
+        Tasky_Task__c[] tasks = ProjectController.getTasks(projectId);
+        ProjectController.deleteTask(tasks[0]);
+        tasks = ProjectController.getTasks(projectId);
+        System.assertEquals(0, tasks.size());
+    }
+    
+    static testmethod void testFlipPriority() {
+        Id projectId = setup();
+        Tasky_Task__c[] tasks = ProjectController.getTasks(projectId);
+        System.assertEquals(false, tasks[0].Priority__c);
+        ProjectController.flipPriority(tasks[0]);
+        tasks = ProjectController.getTasks(projectId);
+        System.assertEquals(true, tasks[0].Priority__c);
+    }
 }
