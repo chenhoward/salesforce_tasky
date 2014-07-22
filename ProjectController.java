@@ -127,4 +127,13 @@ global with Sharing class ProjectController {
         }
         return getTasks(task.Project__c);
     }
+
+    @RemoteAction
+    global static Tasky_Task__c[] flipPriority(Tasky_Task__c task) {
+        task.Priority__c = !task.Priority__c;
+        if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
+            update task;
+        }
+        return getTasks(task.Project__c)
+    }
 }
