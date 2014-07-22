@@ -799,7 +799,7 @@ applyBodyTag="false"
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div class="link-bg" ng-click="showTaskMenu(task)">
-            <p class="link-title shorten"> {{task.Name}} </p>
+            <p class="link-title shorten"> <span ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
@@ -809,13 +809,13 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}" ng-click="flipPriority(currentTask)"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}" ng-click="chatterNav(currentTask)"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-click="editNav(currentTask)"></img>
             </div>
             <div class="taskbut">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
@@ -833,7 +833,7 @@ applyBodyTag="false"
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div class="link-bg" ng-click="showTaskMenu(task)">
-            <p class="link-title shorten"> {{task.Name}} </p>
+            <p class="link-title shorten">  <span ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
@@ -843,13 +843,13 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}" ng-click="flipPriority(currentTask)"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}" ng-click="chatterNav(currentTask)"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-click="editNav(currentTask)"></img>
             </div>
             <div class="taskbut">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
@@ -867,7 +867,7 @@ applyBodyTag="false"
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div class="link-bg" ng-click="showTaskMenu(task)">
-            <p class="link-title shorten"> {{task.Name}} </p>
+            <p class="link-title shorten"> <span ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
             <p class="link-blurb shorten"> {{millisToUTCDate(task.Completed_Date__c) | date:'mediumDate'}} &nbsp;  </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task, 'Pending')"></img>
@@ -876,13 +876,13 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}" ng-click="flipPriority(currentTask)"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}" ng-click="chatterNav(currentTask)"></img>
             </div>
             <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-click="editNav(currentTask)"></img>
             </div>
             <div class="taskbut">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
@@ -1255,6 +1255,25 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     );
   }
 
+  /** Deletes the TASK. */
+  $scope.flipPriority = function(task) {
+    delete task.$$hashKey;
+    Visualforce.remoting.Manager.invokeAction(
+      '{!$RemoteAction.ProjectController.flipPriority}',
+      task,
+      function(result, event) {
+        if (event.status) {
+          $scope.tasks = result;
+          $scope.$apply();
+        } else if (event.type === 'exception') {
+          alert('exception' + event.message);
+        } else {
+          alert('error');
+        }
+      }
+    );
+  }
+
   /** Naviages to the view page of the object with ID. */
   $scope.sOneNav = function(Id) {
     if((typeof sforce != 'undefined') && (sforce != null)) {
@@ -1271,7 +1290,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Goes to the edit page. */
   $scope.chatterNav = function(task) {
-    sforce.one.navigateToSObject(task.Id, chatter);
+    sforce.one.navigateToSObject(task.Id, 'chatter');
   }
 
   $scope.convertTime = function(time) {
