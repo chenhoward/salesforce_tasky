@@ -19,14 +19,6 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'stream/json2.js')}"/>
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'stream/jquery.cometd.js')}"/>
   <script type="text/javascript">
-  function showTaskMenu() { 
-
-  }
-
-  function hideTaskMenu() {
-
-  }
-
   function setSection(to, from) {
     $('#collab').animate({"top":"100%"},100);
     if (!(to.hasClass("active")))
@@ -82,6 +74,7 @@ applyBodyTag="false"
     }
   }
   function switchCollab() {
+    $('#switch-collab').animate({"opacity":"1"}, 1);
     $('#switch-collab').animate({"top":"0%"}, { queue: false, duration: 100 });
     $('#switch-collab').animate({"left":"0%"}, { queue: false, duration: 100 });
     $('#switch-collab').animate({"bottom":"0%"}, { queue: false, duration: 100 });
@@ -102,10 +95,11 @@ applyBodyTag="false"
       $('#collab').animate({"top":"100%"},100);
     });
     $('#hide-switch-collab').on('click', function(event) {
-      $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 100 });
-      $('#switch-collab').animate({"left":"50%"}, { queue: false, duration: 100 });
-      $('#switch-collab').animate({"bottom":"50%"}, { queue: false, duration: 100 });
-      $('#switch-collab').animate({"right":"50%"}, { queue: false, duration: 100 });
+      $('#switch-collab').animate({"opacity":"0"}, 100);
+      $('#switch-collab').animate({"top":"50%"}, 1);
+      $('#switch-collab').animate({"left":"50%"}, 1);
+      $('#switch-collab').animate({"bottom":"50%"}, 1);
+      $('#switch-collab').animate({"right":"50%"}, 1);
     });
   });
   window.addEventListener('load', function() {
@@ -427,6 +421,10 @@ applyBodyTag="false"
     width: 100%;
   }
 
+  .task-link {
+    padding: 0px;
+  }
+
   .link-title {
     padding-top: 2px;
   }
@@ -442,14 +440,56 @@ applyBodyTag="false"
     opacity: 0.5;
     height: 40px;
     width: 40px;
-    margin-top: -37px;
+    margin-top: -57px;
+    padding-right: 20px;
   }
 
   .link-button:hover {
     cursor: pointer;
   }
 
-   .add-collab-button, .remove-collab-button, .assignee-button {
+  .link-bg {
+    padding: 20px;
+    padding-left: 0px;
+  }
+
+  .menu {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    display: block;
+    overflow: hidden;
+    height: 80px;
+    box-shadow: -1px -1px #cccccc;
+    border-bottom: 1px solid #cccccc;
+    background: #FFF;
+    width: 100%;
+    text-align: center;
+  }
+
+  .taskbut {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    border-radius: 25px;
+    margin: 16px;
+    margin-left: 3px;
+    margin-right: 3px;
+    text-align: center;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid #ccc;
+  }
+
+  .taskimg {
+    width: 24px;
+    height: 24px;
+    margin: 12px;
+  }
+
+  .add-collab-button, .remove-collab-button, .assignee-button {
     float: right;
     height: 20px;
     width: 20px;
@@ -479,6 +519,17 @@ applyBodyTag="false"
     margin-left: -3px;
     margin-right: 16px;
     margin-top: -2px;
+  }
+
+  .img-padding {
+    float: left;
+    width: 46px;
+    height: 46px;
+    margin-left: -3px;
+    margin-right: 16px;
+    margin-top: -2px;
+    padding: 20px;
+    padding-right: 0px;
   }
 
   #new {
@@ -626,6 +677,10 @@ applyBodyTag="false"
     opacity: 0.5;
   }
 
+  .link:hover, #newbut:hover, .footer-button:hover {
+    cursor: pointer;
+  }
+
   html { height: 100%; margin: 0; padding: 0;}
 
   body { height: 100%; margin: 0; padding: 0 }
@@ -677,9 +732,6 @@ applyBodyTag="false"
     }
     .navbut:hover {
       cursor: default;
-    }
-    .link:hover, #newbut:hover, .footer-button:hover {
-      cursor: pointer;
     }
   }
   </style>
@@ -740,51 +792,102 @@ applyBodyTag="false"
       </div>
       <section id="one">
         <div class="spacer"></div>
-        <div id="{{task.Id}}" class="link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
+        <div id="{{task.Id}}" class="link task-link" ng-repeat="task in tasks | listType:'Pending' | allFilter:this">
           <div ng-click="updateAssigneeNav(task)">
-            <img class="image" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
-            <img class="image" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+            <img class="image img-padding" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
+            <img class="image img-padding" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
-          <div onclick="showTaskMenu()">
+          <div class="link-bg" ng-click="showTaskMenu(task)">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/doing.svg')}" ng-click="updateTaskStatus(task, 'Doing')"></img>
+          <div class="{{task.Id}} menu"> 
+            <div class="taskbut" ng-click="hideTaskMenu(task)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
+            </div>
+          </div>
         </div>
         <div class="spacer"></div>
       </section>
       <section id="two">
         <div class="spacer"></div>
-        <div id="{{task.Id}}" class="link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this">
+        <div id="{{task.Id}}" class="link task-link" ng-repeat="task in tasks | listType:'Doing' | allFilter:this">
           <div ng-click="updateAssigneeNav(task)">
-            <img class="image" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
-            <img class="image" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+            <img class="image img-padding" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
+            <img class="image img-padding" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
-          <div onclick="showTaskMenu()">
+          <div class="link-bg" ng-click="showTaskMenu(task)">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/completed.svg')}" ng-click="updateTaskStatus(task, 'Done')"></img>
+          <div class="{{task.Id}} menu"> 
+            <div class="taskbut" ng-click="hideTaskMenu(task)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
+            </div>
+          </div>
         </div>
         <div class="spacer"></div>
       </section>
       <section id="three">
         <div class="spacer"></div>
-        <div id="{{task.Id}}" class="link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
+        <div id="{{task.Id}}" class="link task-link" ng-repeat="task in tasks | listType:'Done' | allFilter:this">
           <div ng-click="updateAssigneeNav(task)">
-            <img class="image" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
-            <img class="image" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
+            <img class="image img-padding" ng-show="task.Assignee__c" src="{{idToUrlMap[task.Assignee__c]}}"></img>
+            <img class="image img-padding" ng-show="!task.Assignee__c" src="{!URLFOR($Resource.TaskyAssets, 'images/question.svg')}"></img>
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
-          <div onclick="showTaskMenu()">
+          <div class="link-bg" ng-click="showTaskMenu(task)">
             <p class="link-title shorten"> {{task.Name}} </p>
             <p class="link-blurb shorten"> {{millisToUTCDate(task.Completed_Date__c) | date:'mediumDate'}} &nbsp;  </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task, 'Pending')"></img>
+          <div class="{{task.Id}} menu"> 
+            <div class="taskbut" ng-click="hideTaskMenu(task)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+            </div>
+            <div class="taskbut">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
+            </div>
+          </div>
         </div>
         <div class="spacer"></div>
       </section>
@@ -893,6 +996,14 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     }
   }
 
+  $scope.showTaskMenu = function(task) {
+    $('.' + task.Id).animate({"left":"0"}, 100);
+  }
+
+  $scope.hideTaskMenu = function(task) {
+    $('.' + task.Id).animate({"left":"100%"}, 100);
+  }
+
   $scope.sOneCreate = function(type) {
     if ($scope.creatable) {
       $scope.creatable = false;
@@ -969,6 +1080,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
       });
   }
 
+  /** Runs getProjects() */
+  getProjects();
+
   /** Transition to a PROJECT. */
   $scope.projectTransition = function(project) {
     console.log('it is');
@@ -1023,10 +1137,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Assigns TASK to COLLABORATOR. */
   $scope.assignTask = function(task, collaborator) {
-    $('#switch-collab').animate({"top":"50%"}, { queue: false, duration: 100 });
-    $('#switch-collab').animate({"left":"50%"},{ queue: false, duration: 100 });
-    $('#switch-collab').animate({"bottom":"50%"},{ queue: false, duration: 100 });
-    $('#switch-collab').animate({"right":"50%"},{ queue: false, duration: 100 });
+    $('#switch-collab').animate({"opacity":"0"}, 100);
+    $('#switch-collab').animate({"top":"50%"}, 1);
+    $('#switch-collab').animate({"left":"50%"}, 1);
+    $('#switch-collab').animate({"bottom":"50%"}, 1);
+    $('#switch-collab').animate({"right":"50%"}, 1);
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.assignTask}',
       angular.copy(task),
@@ -1066,8 +1181,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         }
       });
   }
-
-    getProjects();
 
   /** Returns all users in the org that are in project with Id PROJID. */
   $scope.getOrgUsers = function(projId) {
