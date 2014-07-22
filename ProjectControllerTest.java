@@ -25,7 +25,26 @@ public class ProjectControllerTest{
     }
     
     static testmethod void testGetTasks() {
-        Tasky_Task__c[] tasks = ProjectController.getTasks(setup());
+        Id projectId = setup();
+        Tasky_Task__c[] tasks = ProjectController.getTasks(projectId);
         System.assertEquals(1, tasks.size());
+        System.assertEquals('Task 1', tasks[0].Name);
+        System.assertEquals('Pending', tasks[0].Status__c);
+        Tasky_Task__c task = tasks[0];
+        ProjectController.updateTaskStatus(task, 'Done');
+        tasks = ProjectController.getTasks(projectId);
+        System.assertEquals('Done', tasks[0].Status__c);
+    }
+    
+    static testmethod void testAddCollaborator() {
+        Id projectId = setup();
+        Tasky_Collaborator__c collaborator = [SELECT Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        System.assertEquals(UserInfo.getName(), collaborator.Name);
+        ProjectController.removeCollaborator(collaborator.Id);
+        Tasky_Collaborator__c[] collaborators = [SELECT Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        System.assertEquals(0, collaborators.size());
+        ProjectController.addCollaborator(projectId, UserInfo.getUserId());
+        collaborator = [SELECT Name FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        System.assertEquals(UserInfo.getName(), collaborator.Name);
     }
 }
