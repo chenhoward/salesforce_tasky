@@ -1295,7 +1295,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   /** Goes to the edit page. */
   $scope.chatterNav = function(task) {
     if((typeof sforce != 'undefined') && (sforce != null)) {
-      sforce.one.navigateToSObject(Id, "Chatter");
+      sforce.one.navigateToSObject(task.Id, "Chatter");
     } else {
       window.location.assign("/" + task.Id);
     }
