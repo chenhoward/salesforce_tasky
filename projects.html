@@ -1171,8 +1171,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Updates the STATUS of Task with Id TASKID. */
   $scope.updateTaskStatus = function(task, status) {
-    console.log('#' + task.Id);
-    $('#' + task.Id).animate({right:"-100%"}, 200).animate({height:"0px", padding:"0px", border: "0px"}, 200);
+    $('#' + task.Id).animate({right: "-100%"}, 200).animate({height: "0px", padding: "0px", border: "0px"}, 200);
     console.log(task);
     console.log(status);
     $scope.streamUpdate = false;
@@ -1255,7 +1254,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Deletes the TASK. */
   $scope.deleteTask = function(task) {
-    console.log(task);
+    $('#' + task.Id).animate({opacity: "0"}, 200).animate({height: "0px", padding: "0px", border: "0px"}, 200);
     delete task.$$hashKey;
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.deleteTask}',
