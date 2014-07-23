@@ -1274,6 +1274,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Flips the priority of the TASK. */
   $scope.flipPriority = function(task) {
+    $scope.hideTaskMenu(task);
     delete task.$$hashKey;
     task.Priority__c = !task.Priority__c;
     Visualforce.remoting.Manager.invokeAction(
