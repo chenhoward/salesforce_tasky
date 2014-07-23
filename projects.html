@@ -136,6 +136,10 @@ applyBodyTag="false"
     margin: 0px;
   }
 
+  .orange {
+    color: #ff9d00;
+  }
+
   #container {
     position: absolute;
     top: 0px;
@@ -483,6 +487,11 @@ applyBodyTag="false"
     border: 1px solid #ccc;
   }
 
+  .inverted {
+    background: #ff9d00;
+    border-color: #ff9d00;
+  }
+
   .taskimg {
     width: 24px;
     height: 24px;
@@ -799,7 +808,7 @@ applyBodyTag="false"
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div class="link-bg" ng-click="showTaskMenu(task)">
-            <p class="link-title shorten"> <span ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
+            <p class="link-title shorten"> <span class="orange" ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
@@ -808,17 +817,20 @@ applyBodyTag="false"
             <div class="taskbut" ng-click="hideTaskMenu(task)">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}" ng-click="flipPriority(currentTask)"></img>
+            <div class="taskbut inverted" ng-click="flipPriority(currentTask)" ng-show="currentTask.Priority__c">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star-white.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}" ng-click="chatterNav(currentTask)"></img>
+            <div class="taskbut" ng-click="flipPriority(currentTask)" ng-show="!currentTask.Priority__c">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-click="editNav(currentTask)"></img>
+            <div class="taskbut" ng-click="chatterNav(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
+            <div class="taskbut" ng-click="editNav(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+            </div>
+            <div class="taskbut" ng-click="deleteTask(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
             </div>
           </div>
         </div>
@@ -833,7 +845,7 @@ applyBodyTag="false"
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div class="link-bg" ng-click="showTaskMenu(task)">
-            <p class="link-title shorten">  <span ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
+            <p class="link-title shorten"> <span class="orange" ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
             <p class="link-blurb shorten" ng-show="!task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp;  </p>
             <p class="link-blurb late shorten" ng-show="task.Late__c"> {{millisToUTCDate(task.Due_Date__c) | date:'mediumDate'}} &nbsp; </p>
           </div>
@@ -842,17 +854,20 @@ applyBodyTag="false"
             <div class="taskbut" ng-click="hideTaskMenu(task)">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}" ng-click="flipPriority(currentTask)"></img>
+            <div class="taskbut inverted" ng-click="flipPriority(currentTask)" ng-show="currentTask.Priority__c">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star-white.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}" ng-click="chatterNav(currentTask)"></img>
+            <div class="taskbut" ng-click="flipPriority(currentTask)" ng-show="!currentTask.Priority__c">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-click="editNav(currentTask)"></img>
+            <div class="taskbut" ng-click="chatterNav(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
+            <div class="taskbut" ng-click="editNav(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+            </div>
+            <div class="taskbut" ng-click="deleteTask(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
             </div>
           </div>
         </div>
@@ -867,7 +882,7 @@ applyBodyTag="false"
           </div>
           <!--<div ng-click="sOneNav(task.Id)">-->
           <div class="link-bg" ng-click="showTaskMenu(task)">
-            <p class="link-title shorten"> <span ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
+            <p class="link-title shorten"> <span class="orange" ng-show="task.Priority__c"> &#9733; </span> {{task.Name}} </p>
             <p class="link-blurb shorten"> {{millisToUTCDate(task.Completed_Date__c) | date:'mediumDate'}} &nbsp;  </p>
           </div>
           <img class="link-button" src="{!URLFOR($Resource.TaskyAssets, 'images/pending.svg')}" ng-click="updateTaskStatus(task, 'Pending')"></img>
@@ -875,17 +890,20 @@ applyBodyTag="false"
             <div class="taskbut" ng-click="hideTaskMenu(task)">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/cancel.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}" ng-click="flipPriority(currentTask)"></img>
+            <div class="taskbut inverted" ng-click="flipPriority(currentTask)" ng-show="currentTask.Priority__c">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star-white.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}" ng-click="chatterNav(currentTask)"></img>
+            <div class="taskbut" ng-click="flipPriority(currentTask)" ng-show="!currentTask.Priority__c">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/star.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-click="editNav(currentTask)"></img>
+            <div class="taskbut" ng-click="chatterNav(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
             </div>
-            <div class="taskbut">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}" ng-click="deleteTask(currentTask)"></img>
+            <div class="taskbut" ng-click="editNav(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+            </div>
+            <div class="taskbut" ng-click="deleteTask(currentTask)">
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
             </div>
           </div>
         </div>
