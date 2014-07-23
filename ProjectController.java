@@ -16,7 +16,7 @@ global with Sharing class ProjectController {
     global static Tasky_Task__c[] getTasks(Id projectId) {
         Tasky_Task__c[] tasks;
         if (Schema.SObjectType.Tasky_Task__c.isAccessible()) {
-            tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Due_Date__c, Completed_Date__c, Project__c, Priority__c FROM Tasky_Task__c WHERE Project__c =: projectId ORDER BY Priority__c DESC, Due_Date__c ASC NULLS LAST];
+            tasks = [SELECT Name, Assignee__c, Detail__c, Late__c, Status__c, Due_Date__c, Completed_Date__c, Project__c, Priority__c FROM Tasky_Task__c WHERE Project__c =: projectId ORDER BY Priority__c DESC, Due_Date__c ASC NULLS LAST, LastModifiedDate DESC];
         }
         return tasks;
     }
