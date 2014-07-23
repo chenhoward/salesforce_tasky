@@ -130,7 +130,6 @@ global with Sharing class ProjectController {
 
     @RemoteAction
     global static Tasky_Task__c[] flipPriority(Tasky_Task__c task) {
-        task.Priority__c = !task.Priority__c;
         if (Schema.SObjectType.Tasky_Task__c.isUpdateable()) {
             update task;
         }

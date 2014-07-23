@@ -1272,9 +1272,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     );
   }
 
-  /** Deletes the TASK. */
+  /** Flips the priority of the TASK. */
   $scope.flipPriority = function(task) {
     delete task.$$hashKey;
+    task.Priority__c = !task.Priority__c;
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.flipPriority}',
       task,
@@ -1291,7 +1292,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     );
   }
 
-  /** Naviages to the view page of the object with ID. */
+  /** Navigates to the view page of the object with ID. */
   $scope.sOneNav = function(Id) {
     if((typeof sforce != 'undefined') && (sforce != null)) {
       sforce.one.navigateToSObject(Id);
