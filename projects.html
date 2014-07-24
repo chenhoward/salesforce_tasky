@@ -249,10 +249,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.userIds = {};
   /** The current project. */
   $scope.currentProject;
-  /** Whether or not it is me. */
+  /** Whether or not the user wants to see all tasks. */
   $scope.all = true;
-  /** Maps projectId to Collaborators. */
-  $scope.projectCollaboratorMap = {};
   /** Whether or not to use stream updates. */
   $scope.streamUpdate = true;
   /** True if we can go to the create view. */
@@ -292,35 +290,31 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           for(var i = 0; i < result.length; i++) {
             $scope.idToUrlMap[keys[i]] = result[i];
           }
-          console.log($scope.idToUrlMap);
           $scope.$apply();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       })
   }
 
   /** Gets all the Collaborators in a project. */
   var getProjectCollaborators = function(projectId) {
-    console.log('ran');
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.getProjectCollaborators}',
       projectId,
       function(result, event) {
         if (event.status) {
-          /** List of all collaborators in a project. */
-          console.log(result);
           $scope.projectCollaborators = result;
           for (var i = 0; i < result.length; i++) {
             $scope.userIds[result[i].User__c] = true;
           }
           getUserImages();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -337,9 +331,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           }
           getUserImages();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -349,7 +343,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Transition to a PROJECT. */
   $scope.projectTransition = function(project) {
-    console.log('it is');
     $scope.currentProject = project;
     setSection($('#one'), $('#one-overall'));
     getProjectCollaborators(project.Id);
@@ -369,13 +362,12 @@ checklistApp.controller('ProjectCtrl', function($scope) {
               $scope.userIds[task.Assignee__c] = true;
             }
           }
-          console.log('here');
           $scope.getOrgUsers(projectId);
           $scope.$apply();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -414,10 +406,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         if (event.status) {
           $scope.currentTask.Assignee__c = result.Assignee__c;
           $scope.$apply();
-        } else if (event.type == 'exception') {
-          console.log('exception');
+        } else if (event.type === 'exception') {
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -425,8 +417,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   /** Updates the STATUS of Task with Id TASKID. */
   $scope.updateTaskStatus = function(task, status) {
     $('#' + task.Id).animate({right: "-100%"}, 200).animate({height: "0px", padding: "0px", border: "0px"}, 200);
-    console.log(task);
-    console.log(status);
     $scope.streamUpdate = false;
     Visualforce.remoting.Manager.invokeAction(
       '{!$RemoteAction.ProjectController.updateTaskStatus}',
@@ -436,11 +426,10 @@ checklistApp.controller('ProjectCtrl', function($scope) {
         if (event.status) {
           $scope.tasks = result;
           $scope.$apply();
-          console.log('Updated task');
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -456,13 +445,11 @@ checklistApp.controller('ProjectCtrl', function($scope) {
          for(var i = 0; i < result.length; i++) {
             $scope.userIds[result[i].Id] = true;
           }
-          console.log(result);
           getUserImages();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
-          console.log(event.message);
+          alert('error');
         }
       });
   }
@@ -480,9 +467,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           $scope.projectCollaborators = result[1];
           $scope.$apply();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -498,9 +485,9 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           $scope.projectCollaborators = result[1];
           $scope.$apply();
         } else if (event.type === 'exception') {
-          console.log('exception');
+          alert('Exception: ' + event.message);
         } else {
-          console.log('error');
+          alert('error');
         }
       });
   }
@@ -517,7 +504,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           $scope.tasks = result;
           $scope.$apply();
         } else if (event.type === 'exception') {
-          alert('exception' + event.message);
+          alert('Exception: ' + event.message);
         } else {
           alert('error');
         }
@@ -538,7 +525,7 @@ checklistApp.controller('ProjectCtrl', function($scope) {
           $scope.tasks = result;
           $scope.$apply();
         } else if (event.type === 'exception') {
-          alert('exception' + event.message);
+          alert('Exception: ' + event.message);
         } else {
           alert('error');
         }
@@ -571,11 +558,6 @@ checklistApp.controller('ProjectCtrl', function($scope) {
     } else {
       window.location.assign("/" + task.Id);
     }
-  }
-
-  $scope.convertTime = function(time) {
-    var date = new Date(time);
-    return date.toString();
   }
 
   var toUTCDate = function(date) {
