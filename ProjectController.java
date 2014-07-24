@@ -59,7 +59,10 @@ global with Sharing class ProjectController {
     @RemoteAction
     global static User[] getOrgUsers(Id projId) {
         Tasky_Collaborator__c[] collaborators = getProjectCollaborators(projId);
-        User[] users = [SELECT Name, Id, Title FROM User];
+        User[] users;
+        if (Schema.SObjectType.User.isAccessible()) {
+            users = [SELECT Name, Id, Title FROM User];
+        }
         User[] finalList = new List<User>();
         for (Integer i = 0; i < users.size(); i++) {
             if (!isUserACollaborator(users[i], collaborators)) {
@@ -82,8 +85,13 @@ global with Sharing class ProjectController {
     /** Removes Collaborator with Id COLLABORATOR from the project. */
     @RemoteAction
     global static List<SObject[]> removeCollaborator(Id collaboratorId) {
-        Tasky_Collaborator__c[] collaborators = [SELECT Id, Project__c FROM Tasky_Collaborator__c WHERE Id =: collaboratorId];
-        Id projId = collaborators[0].Project__c;
+        Id projId;
+        Tasky_Collaborator__c[] collaborators;
+        if (Schema.SObjectType.Tasky_Collaborator__c.isAccessible()) {
+            collaborators = [SELECT Id, Project__c FROM Tasky_Collaborator__c WHERE Id =: collaboratorId];
+            projId = collaborators[0].Project__c;
+
+        }
         if (Schema.SObjectType.Tasky_Collaborator__c.isDeletable()) {
             delete collaborators[0];
         }
@@ -93,7 +101,10 @@ global with Sharing class ProjectController {
     /** Returns all the Collaborators working on project with Id PROJECTID. */
     @RemoteAction
     global static Tasky_Collaborator__c[] getProjectCollaborators(Id projectId) {
-        Tasky_Collaborator__c[] collaborators = [SELECT Id, Name, User__c, User__r.Title FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        Tasky_Collaborator__c[] collaborators;
+        if (Schema.SObjectType.Tasky_Collaborator__c.isAccessible()) {
+            collaborators = [SELECT Id, Name, User__c, User__r.Title FROM Tasky_Collaborator__c WHERE Project__c =: projectId];
+        }
         return collaborators;
     }
 
