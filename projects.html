@@ -225,29 +225,6 @@ applyBodyTag="false"
           </div>
         </div>
       </div>
-      <!--<div id="task-menu-background">
-      </div>
-      <div id="task-menu">
-        <img class="x" id="hide-switch-collab" src="{!URLFOR($Resource.TaskyAssets, 'images/x.svg')}"></img>
-        <div class="normal-title"> Change Assignee </div>
-        <div class="link">
-          <input type="text" id="add-collab-input" ng-model="searchText" placeholder="Search for a person..."/>
-        </div>
-        <div ng-repeat="collaborator in projectCollaborators | filter:searchText">
-          <div class="link" ng-show="currentTask.Assignee__c == collaborator.Id">
-            <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
-            <p class="link-title shorten"> {{collaborator.Name}} </p>
-            <p class="link-blurb shorten"> {{collaborator.User__r.Title}}  &nbsp;  </p>
-            <img class="assignee-button" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}" ng-click="assignTask(currentTask, collaborator)"></img>
-          </div>
-          <div class="link transparent" ng-show="currentTask.Assignee__c != collaborator.Id">
-            <img class="image" src="{{idToUrlMap[collaborator.User__c]}}"></img>
-            <p class="link-title shorten"> {{collaborator.Name}} </p>
-            <p class="link-blurb shorten"> {{collaborator.User__r.Title}}  &nbsp;  </p>
-            <img class="assignee-button not-assignee" src="{!URLFOR($Resource.TaskyAssets, 'images/check.svg')}" ng-click="assignTask(currentTask, collaborator)"></img>
-          </div>
-        </div>
-      </div>-->
     </div>
   </div>
 </body>
