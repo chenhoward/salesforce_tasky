@@ -70,6 +70,7 @@ public class ProjectControllerTest{
         Id projectId = setup();
         Tasky_Task__c[] tasks = ProjectController.getTasks(projectId);
         System.assertEquals(false, tasks[0].Priority__c);
+        tasks[0].Priority__c = true;
         ProjectController.flipPriority(tasks[0]);
         tasks = ProjectController.getTasks(projectId);
         System.assertEquals(true, tasks[0].Priority__c);

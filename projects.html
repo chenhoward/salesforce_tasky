@@ -11,7 +11,7 @@ applyBodyTag="false"
   <title> Tasky </title>
   <apex:stylesheet value="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400"/>
   <meta name="viewport" content="width=device-width, initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no"/>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"> </script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"> </script>
   <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"/>
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'fastclick/fastclick.js')}"/>
   <apex:stylesheet value="{!URLFOR($Resource.TaskyAssets, 'fonts/proximanova.css')}"/>
@@ -21,7 +21,7 @@ applyBodyTag="false"
   <apex:includeScript value="{!URLFOR($Resource.TaskyAssets, 'slide.js')}"/>
   <apex:stylesheet value="{!URLFOR($Resource.TaskyAssets, 'style.css')}"/>
 </head>
-<body ng-app="taskyApp">
+<body>
   <div id="main-page" ng-controller="ProjectCtrl">
     <div id="navbar">
       <a class="navbut" id="pending-tab" data-section="one" href="#">
