@@ -103,7 +103,8 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
             </div>
             <div class="taskbut" ng-click="editNav(currentTask)">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-show = "!editingTask"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/task-loader.gif')}" ng-show = "editingTask"></img>
             </div>
             <div class="taskbut" ng-click="deleteTask(currentTask)">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
@@ -140,7 +141,8 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
             </div>
             <div class="taskbut" ng-click="editNav(currentTask)">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-show = "!editingTask"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/task-loader.gif')}" ng-show = "editingTask"></img>
             </div>
             <div class="taskbut" ng-click="deleteTask(currentTask)">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
@@ -176,7 +178,8 @@ applyBodyTag="false"
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/chatter.svg')}"></img>
             </div>
             <div class="taskbut" ng-click="editNav(currentTask)">
-              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/edit.svg')}" ng-show = "!editingTask"></img>
+              <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/task-loader.gif')}" ng-show = "editingTask"></img>
             </div>
             <div class="taskbut" ng-click="deleteTask(currentTask)">
               <img class="taskimg" src="{!URLFOR($Resource.TaskyAssets, 'images/delete.svg')}"></img>
@@ -255,6 +258,8 @@ checklistApp.controller('ProjectCtrl', function($scope) {
   $scope.streamUpdate = true;
   /** True if we can go to the create view. */
   $scope.creatable = true;
+  /** True if we recently clicked editing task. */
+  $scope.editingTask = false;
 
 
   $scope.showTaskMenu = function(task) {
@@ -544,11 +549,13 @@ checklistApp.controller('ProjectCtrl', function($scope) {
 
   /** Goes to the edit page. */
   $scope.editNav = function(task) {
+    $scope.editingTask = true;
     if((typeof sforce != 'undefined') && (sforce != null)) {
       sforce.one.editRecord(task.Id);
     } else {
       window.location.assign("/" + task.Id + "/e");
     }
+    setTimeout(function(){$scope.editingTask = false; $scope.$apply();}, 2000);
   }
 
   /** Goes to the edit page. */
